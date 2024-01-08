@@ -1,0 +1,10 @@
+name: KatsuChest
+version: '${project.version}'
+main: com.github.maazapan.katsuchest.KatsuChest
+api-version: 1.16
+
+commands:
+  katsuchest:
+    aliases:
+      - ktchest
+      - ktc

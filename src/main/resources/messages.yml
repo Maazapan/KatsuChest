@@ -1,0 +1,6 @@
+cant-open-chest: "&cYou can''t open this chest!"
+no-args: "&fPlease use &7/ktchest help &fto see the commands."
+no-permission: "&cYou dont have permission to do that."
+no-args-give: "&fPlease use &7/ktchest give <id_chest> &fto give a chest."
+no-exist-chest: "&cThis chest doesn''t exist."
+give-chest: "&fYou have received a &a%chest% &fchest."

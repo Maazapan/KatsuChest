@@ -1,0 +1,25 @@
+
+config:
+
+  prefix: " &8▸ &a&l✔ &8| #FF1D1DKatsu &8: &f"
+
+  max-place-chest: 1
+
+  custom-chest:
+    KEY_CHEST:
+      id: PLAYER_HEAD
+      texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q4NzZmODJkNTNjNmIxM2Q4OGViMjFiZTMyMTE5ZjFhYWI2MzFkZGY2ZjZhZTlkNmJjMzc0MmVkMWRlYSJ9fX0="
+
+      chest-item:
+        id: PLAYER_HEAD
+        texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q4NzZmODJkNTNjNmIxM2Q4OGViMjFiZTMyMTE5ZjFhYWI2MzFkZGY2ZjZhZTlkNmJjMzc0MmVkMWRlYSJ9fX0="
+        display_name: "&fKey Chest"
+
+    PANEL_CHEST:
+      id: PLAYER_HEAD
+      texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2UyZDc5NjEyMDIzZTI3MGJjODk1MzI3MjliYzcxMWY5YjhmZGUwY2VhY2RjNTljOTc5ZTFiNDM2MzM3NGYifX19"
+
+      chest-item:
+        id: PLAYER_HEAD
+        texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2UyZDc5NjEyMDIzZTI3MGJjODk1MzI3MjliYzcxMWY5YjhmZGUwY2VhY2RjNTljOTc5ZTFiNDM2MzM3NGYifX19"
+        display_name: "&fPanel Chest"
