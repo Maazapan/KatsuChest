@@ -84,6 +84,7 @@ public class PlayerListener implements Listener {
                 return;
             }
 
+            //test
             ChestType chestType = chestManager.getChestType(itemStack);
             Location location = event.getBlock().getLocation();
 
