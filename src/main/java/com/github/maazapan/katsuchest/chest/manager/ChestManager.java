@@ -3,9 +3,12 @@ package com.github.maazapan.katsuchest.chest.manager;
 import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
+import com.github.maazapan.katsuchest.chest.types.KeyChest;
+import com.github.maazapan.katsuchest.chest.types.PanelChest;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,6 +17,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,7 +33,6 @@ public class ChestManager {
     public ChestManager(KatsuChest plugin) {
         this.plugin = plugin;
     }
-
 
     /**
      * Create a custom chest.
@@ -75,7 +78,7 @@ public class ChestManager {
         standLocation.setYaw(KatsuUtils.getYawBlockFace(facing));
         standLocation.add(standLocation.getDirection().multiply(0.3));
 
-        location.getWorld().spawn(standLocation, ArmorStand.class, (ArmorStand armorStand) -> {
+        ArmorStand stand = location.getWorld().spawn(standLocation, ArmorStand.class, (ArmorStand armorStand) -> {
             armorStand.setGravity(false);
             armorStand.setSmall(true);
             armorStand.setInvulnerable(true);
@@ -84,12 +87,65 @@ public class ChestManager {
             ItemStack itemStack = new ItemBuilder()
                     .fromConfig(plugin.getConfig(), "config.custom-chest." + chestType)
                     .toItemStack();
-
             armorStand.setHelmet(itemStack);
         });
+        UUID chestUUID = UUID.randomUUID();
 
-        //UUID chestUUID = UUID.randomUUID();
+        CustomChest customChest = chestType == ChestType.KEY_CHEST ?
+                new KeyChest(chestUUID, player.getUniqueId()) :
+                new PanelChest(chestUUID, player.getUniqueId());
+        customChest.setLocation(location);
+
+        // Set the NBT tags.
+        NBTEntity nbtEntity = new NBTEntity(stand);
+        nbtEntity.getPersistentDataContainer().setUUID("katsu_chest_uuid", chestUUID);
+
+        NBTBlock nbtBlock = new NBTBlock(location.getBlock());
+        nbtBlock.getData().setString("katsu_chest_type", chestType.toString());
+        nbtBlock.getData().setUUID("katsu_chest_uuid", chestUUID);
+
+        chestMap.put(chestUUID, customChest);
     }
+
+    /**
+     * Remove a custom chest.
+     *
+     * @param chestUUID Chest UUID
+     * @param owner     Player UUID
+     */
+    public void removeChest(UUID chestUUID, UUID owner) {
+        CustomChest customChest = chestMap.get(chestUUID);
+
+        if (customChest == null || !customChest.getOwner().equals(owner)) return;
+        // The List of armor stands near the chest.
+        for (Entity entity : customChest.getLocation().getWorld()
+                .getNearbyEntities(customChest.getLocation(), 2, 2, 3)) {
+
+            NBTEntity nbtEntity = new NBTEntity(entity);
+
+            if (nbtEntity.getPersistentDataContainer().hasTag("katsu_chest_uuid")) {
+                UUID uuid = nbtEntity.getPersistentDataContainer().getUUID("katsu_chest_uuid");
+
+                if (chestUUID.equals(uuid)) entity.remove();
+            }
+        }
+        chestMap.remove(chestUUID);
+    }
+
+
+    /**
+     * Check if the player is the owner of the chest.
+     *
+     * @param chestUUID Chest UUID
+     * @param owner     Player UUID
+     * @return boolean
+     */
+    public boolean isChestOwner(UUID chestUUID, UUID owner) {
+        CustomChest customChest = chestMap.get(chestUUID);
+        if (customChest == null) return false;
+        return customChest.getOwner().equals(owner);
+    }
+
 
     /**
      * Get the number of chests placed by the player.

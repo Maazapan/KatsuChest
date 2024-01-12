@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -51,8 +52,7 @@ public class PlayerListener implements Listener {
             // Check if the player can open the chest.
             if (!customChest.canOpen(player)) {
                 FileManager config = new FileManager(plugin, FileType.MESSAGES);
-
-                player.sendMessage(config.getWithPrefix("cant-open-chest"));
+                player.sendMessage(config.get("cant-open-chest"));
                 event.setCancelled(true);
                 return;
             }
@@ -80,17 +80,40 @@ public class PlayerListener implements Listener {
             int maxChests = fileManager.getInt("config.max-place-chest", FileType.CONFIG);
 
             if (chestManager.getAmountChestPlaced(player.getUniqueId()) >= maxChests) {
-                player.sendMessage(fileManager.getWithPrefix("messages.max-chest-placed", FileType.MESSAGES));
+                player.sendMessage(fileManager.get("max-chest-placed", FileType.MESSAGES));
+                event.setCancelled(true);
                 return;
             }
-
-            //testasd
             ChestType chestType = chestManager.getChestType(itemStack);
             Location location = event.getBlock().getLocation();
 
             chestManager.placeCustomChest(player, location, chestType);
 
             if (player.getGameMode() != GameMode.CREATIVE) player.getInventory().remove(itemStack);
+        }
+    }
+
+    /**
+     * This method is called when a player breaks a block.
+     * If the block is a custom chest, then we remove it from the map.
+     *
+     * @param event BlockBreakEvent
+     */
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+
+        if (block.getType() != Material.CHEST) return;
+        ChestManager chestManager = plugin.getChestManager();
+
+        // If the block is a custom chest, then we remove it from the map.
+        if (chestManager.isCustomChest(block)) {
+            UUID chestUUID = chestManager.getCustomChestUUID(block);
+
+            if (chestManager.isChestOwner(chestUUID, player.getUniqueId())) {
+                chestManager.removeChest(chestUUID, player.getUniqueId());
+            }
         }
     }
 }
