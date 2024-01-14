@@ -1,6 +1,7 @@
 package com.github.maazapan.katsuchest.chest.manager;
 
 import com.github.maazapan.katsuchest.KatsuChest;
+import com.github.maazapan.katsuchest.api.ChestPlaceEvent;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.types.KeyChest;
@@ -103,6 +104,10 @@ public class ChestManager {
         NBTBlock nbtBlock = new NBTBlock(location.getBlock());
         nbtBlock.getData().setString("katsu_chest_type", chestType.toString());
         nbtBlock.getData().setUUID("katsu_chest_uuid", chestUUID);
+
+        // Call the event.
+        ChestPlaceEvent chestPlaceEvent = new ChestPlaceEvent(customChest, player);
+        plugin.getServer().getPluginManager().callEvent(chestPlaceEvent);
 
         chestMap.put(chestUUID, customChest);
     }

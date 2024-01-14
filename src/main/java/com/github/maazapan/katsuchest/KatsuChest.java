@@ -2,6 +2,7 @@ package com.github.maazapan.katsuchest;
 
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.manager.LoaderManager;
+import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class KatsuChest extends JavaPlugin {

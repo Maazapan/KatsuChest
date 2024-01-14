@@ -8,15 +8,25 @@ import java.io.File;
 public class FileCreator extends YamlConfiguration {
 
     private final String name;
-    private final File file;
-    private final Plugin plugin;
+    private final String path;
 
-    public FileCreator(String name, File file, Plugin plugin) {
+    private final Plugin plugin;
+    private File file;
+
+    public FileCreator(String name, String path, Plugin plugin) {
         this.name = name;
         this.plugin = plugin;
-        this.file = new File(file, name);
-        saveDefault();
-        reload();
+        this.path = path;
+    }
+
+    public FileCreator create() {
+        file = new File(path, name);
+
+        if (!file.exists()) {
+            this.saveDefault();
+        }
+        this.reload();
+        return this;
     }
 
     public void reload() {
@@ -30,10 +40,13 @@ public class FileCreator extends YamlConfiguration {
     public void save() {
         try {
             super.save(file);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public File toFile() {
+        return file;
     }
 
     public void saveDefault() {

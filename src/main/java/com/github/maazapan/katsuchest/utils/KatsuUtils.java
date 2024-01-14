@@ -2,6 +2,7 @@ package com.github.maazapan.katsuchest.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
@@ -28,6 +29,15 @@ public class KatsuUtils {
             matcher = pattern.matcher(message);
         }
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public static void parseSound(Player player, String sound) {
+        String[] soundSplit = sound.split(";");
+
+        player.playSound(player.getLocation(),
+                Sound.valueOf(soundSplit[0]),
+                Float.parseFloat(soundSplit[1]),
+                Float.parseFloat(soundSplit[2]));
     }
 
 

@@ -10,7 +10,6 @@ import java.util.UUID;
 
 public abstract class CustomChest {
 
-    private List<UUID> friends;
     private final UUID owner;
 
     private boolean locked;
@@ -24,10 +23,6 @@ public abstract class CustomChest {
         this.owner = owner;
         this.type = type;
         this.uuid = uuid;
-    }
-
-    public List<UUID> getFriends() {
-        return friends;
     }
 
     public UUID getOwner() {
@@ -60,6 +55,5 @@ public abstract class CustomChest {
 
     abstract public void open(Player player);
 
-    abstract public ItemStack getBlock();
     abstract public boolean canOpen(Player player);
 }

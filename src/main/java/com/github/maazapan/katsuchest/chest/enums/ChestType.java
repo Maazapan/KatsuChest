@@ -4,6 +4,7 @@ public enum ChestType {
 
     KEY_CHEST,
     PANEL_CHEST,
+    FRIEND_CHEST,
     CUSTOM;
 
 

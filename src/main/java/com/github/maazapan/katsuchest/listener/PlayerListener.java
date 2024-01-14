@@ -4,6 +4,7 @@ import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
+import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import org.bukkit.GameMode;
@@ -48,11 +49,12 @@ public class PlayerListener implements Listener {
             UUID chestUUID = chestManager.getCustomChestUUID(block);
             CustomChest customChest = chestManager.getCustomChest(chestUUID);
 
+            FileManager config = new FileManager(plugin, FileType.CONFIG);
+
             if (customChest == null) return;
             // Check if the player can open the chest.
             if (!customChest.canOpen(player)) {
-                FileManager config = new FileManager(plugin, FileType.MESSAGES);
-                player.sendMessage(config.get("cant-open-chest"));
+                KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
                 event.setCancelled(true);
                 return;
             }
