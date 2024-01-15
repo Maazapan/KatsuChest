@@ -2,6 +2,8 @@ name: KatsuChest
 version: '${project.version}'
 main: com.github.maazapan.katsuchest.KatsuChest
 api-version: 1.16
+softdepend:
+  - MultiverseCore
 
 commands:
   katsuchest:

@@ -35,4 +35,9 @@ public class KeyChest extends CustomChest {
         }
         return false;
     }
+
+
+    private void animation() {
+
+    }
 }

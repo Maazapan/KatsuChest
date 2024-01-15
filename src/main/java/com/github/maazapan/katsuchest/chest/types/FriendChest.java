@@ -4,9 +4,14 @@ import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class FriendChest extends CustomChest {
+
+    private final List<UUID> friends = new ArrayList<>();
+
 
     public FriendChest(UUID uuid, UUID owner) {
         super(uuid, owner, ChestType.FRIEND_CHEST);
@@ -21,5 +26,9 @@ public class FriendChest extends CustomChest {
     @Override
     public boolean canOpen(Player player) {
         return false;
+    }
+
+    public List<UUID> getFriends() {
+        return friends;
     }
 }

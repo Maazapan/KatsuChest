@@ -1,5 +1,6 @@
 package com.github.maazapan.katsuchest.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -38,6 +39,20 @@ public class KatsuUtils {
                 Sound.valueOf(soundSplit[0]),
                 Float.parseFloat(soundSplit[1]),
                 Float.parseFloat(soundSplit[2]));
+    }
+
+    public static String locationToString(Location location) {
+        return location.getWorld().getName() + "," + location.getX() + "," + location.getY() + "," + location.getZ();
+    }
+
+    public static Location stringToLocation(String string) {
+        String[] split = string.split(",");
+        return new Location(
+                Bukkit.getWorld(split[0]),
+                Double.parseDouble(split[1]),
+                Double.parseDouble(split[2]),
+                Double.parseDouble(split[3])
+        );
     }
 
 

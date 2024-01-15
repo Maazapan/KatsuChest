@@ -22,9 +22,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChestManager {
 
@@ -215,5 +214,42 @@ public class ChestManager {
      */
     public UUID getCustomChestUUID(Block block) {
         return new NBTBlock(block).getData().getUUID("katsu_chest_uuid");
+    }
+
+    /**
+     * Gets all owners of the chests.
+     *
+     * @return Set<UUID>
+     */
+    public Set<UUID> getChestOwners() {
+        return chestMap.values().stream()
+                .map(CustomChest::getOwner)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Gets all the chests of the owner.
+     *
+     * @param owner Player UUID
+     * @return List<CustomChest>
+     */
+    public List<CustomChest> getChests(UUID owner) {
+        return chestMap.values().stream()
+                .filter(chest -> chest.getOwner().equals(owner))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Add a custom chest to the map.
+     *
+     * @param chestUUID   UUID of the chest
+     * @param customChest CustomChest
+     */
+    public void addChest(UUID chestUUID, CustomChest customChest) {
+        chestMap.put(chestUUID, customChest);
+    }
+
+    public List<CustomChest> getChests() {
+        return new ArrayList<>(chestMap.values());
     }
 }

@@ -4,11 +4,13 @@ import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.commands.ChestCommand;
 import com.github.maazapan.katsuchest.listener.ChestListener;
 import com.github.maazapan.katsuchest.listener.PlayerListener;
+import com.github.maazapan.katsuchest.manager.loader.ChestLoader;
 import com.github.maazapan.katsuchest.utils.file.FileCreator;
 
 public class LoaderManager {
 
     private final KatsuChest plugin;
+    private ChestLoader chestLoader;
 
     public LoaderManager(KatsuChest plugin) {
         this.plugin = plugin;
@@ -19,10 +21,13 @@ public class LoaderManager {
         loadListener();
         loadCommands();
         loadFiles();
+
+        this.chestLoader = new ChestLoader(plugin);
+        this.chestLoader.load();
     }
 
     public void disable() {
-
+        this.chestLoader.save();
     }
 
     /**
