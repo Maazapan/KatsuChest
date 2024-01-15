@@ -22,6 +22,11 @@ public class FriendChest extends CustomChest {
 
     }
 
+    @Override
+    public void animation() {
+
+    }
+
 
     @Override
     public boolean canOpen(Player player) {

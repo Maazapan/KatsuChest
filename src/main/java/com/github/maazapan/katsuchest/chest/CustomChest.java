@@ -54,5 +54,8 @@ public abstract class CustomChest {
 
     abstract public void open(Player player);
 
+    abstract public void animation();
+
     abstract public boolean canOpen(Player player);
+
 }

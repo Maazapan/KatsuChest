@@ -18,7 +18,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -122,17 +121,13 @@ public class ChestManager {
 
         if (customChest == null || !customChest.getOwner().equals(owner)) return;
         // The List of armor stands near the chest.
-        for (Entity entity : customChest.getLocation().getWorld()
-                .getNearbyEntities(customChest.getLocation(), 2, 2, 3)) {
+        ArmorStand armorStand = KatsuUtils.chestArmorStand(customChest.getLocation(), chestUUID);
 
-            NBTEntity nbtEntity = new NBTEntity(entity);
-
-            if (nbtEntity.getPersistentDataContainer().hasTag("katsu_chest_uuid")) {
-                UUID uuid = nbtEntity.getPersistentDataContainer().getUUID("katsu_chest_uuid");
-
-                if (chestUUID.equals(uuid)) entity.remove();
-            }
+        if (armorStand != null) {
+            armorStand.remove();
         }
+
+
         chestMap.remove(chestUUID);
     }
 

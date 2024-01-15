@@ -1,13 +1,17 @@
 package com.github.maazapan.katsuchest.utils;
 
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.Base64;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +43,21 @@ public class KatsuUtils {
                 Sound.valueOf(soundSplit[0]),
                 Float.parseFloat(soundSplit[1]),
                 Float.parseFloat(soundSplit[2]));
+    }
+
+    public static ArmorStand chestArmorStand(Location location, UUID chestUUID) {
+        for (Entity entity : location.getWorld()
+                .getNearbyEntities(location, 2, 2, 3)) {
+
+            NBTEntity nbtEntity = new NBTEntity(entity);
+
+            if (nbtEntity.getPersistentDataContainer().hasTag("katsu_chest_uuid")) {
+                UUID uuid = nbtEntity.getPersistentDataContainer().getUUID("katsu_chest_uuid");
+
+                if (chestUUID.equals(uuid)) return (ArmorStand) entity;
+            }
+        }
+        return null;
     }
 
     public static String locationToString(Location location) {

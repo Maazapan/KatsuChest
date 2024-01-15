@@ -20,6 +20,11 @@ public class PanelChest extends CustomChest {
 
     }
 
+    @Override
+    public void animation() {
+
+    }
+
 
     @Override
     public boolean canOpen(Player player) {

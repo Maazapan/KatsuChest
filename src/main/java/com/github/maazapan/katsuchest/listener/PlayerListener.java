@@ -56,6 +56,9 @@ public class PlayerListener implements Listener {
             if (!customChest.canOpen(player)) {
                 KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
                 event.setCancelled(true);
+
+                // Animate the chest.
+                customChest.animation();
                 return;
             }
             customChest.open(player);
@@ -115,6 +118,14 @@ public class PlayerListener implements Listener {
 
             if (chestManager.isChestOwner(chestUUID, player.getUniqueId())) {
                 chestManager.removeChest(chestUUID, player.getUniqueId());
+                CustomChest customChest = chestManager.getCustomChest(chestUUID);
+
+                // Drop the custom chest item.
+                if (player.getGameMode() == GameMode.SURVIVAL) {
+                    ItemStack itemStack = chestManager.getCustomChestItem(customChest.getType());
+                    player.getWorld().dropItemNaturally(block.getLocation(), itemStack);
+                }
+
             }
         }
     }

@@ -9,11 +9,15 @@ public final class KatsuChest extends JavaPlugin {
     private ChestManager chestManager;
     private LoaderManager loaderManager;
 
+    private static KatsuChest instance;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
         this.chestManager = new ChestManager(this);
         this.loaderManager = new LoaderManager(this);
+
+        instance = this;
         loaderManager.load();
     }
 
@@ -29,5 +33,9 @@ public final class KatsuChest extends JavaPlugin {
 
     public String getPrefix() {
         return getConfig().getString("config.prefix");
+    }
+
+    public static KatsuChest getInstance() {
+        return instance;
     }
 }

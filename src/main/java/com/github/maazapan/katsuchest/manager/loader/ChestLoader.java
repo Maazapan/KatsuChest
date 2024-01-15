@@ -155,7 +155,7 @@ public class ChestLoader {
                 }
             }
 
-            plugin.getLogger().info("Loaded " + chestManager.getChests().size() + " custom chests.");
+            plugin.getLogger().info("Success loading chests.");
 
         } catch (Exception e) {
             e.printStackTrace();
