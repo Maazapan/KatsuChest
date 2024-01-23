@@ -18,6 +18,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public class ChestListener implements Listener {
 
     private final KatsuChest plugin;
@@ -71,12 +73,14 @@ public class ChestListener implements Listener {
     public void onChestInteract(ChestOpenEvent event) {
         CustomChest customChest = event.getCustomChest();
         Player player = event.getPlayer();
+        UUID ownerUUID = customChest.getOwner();
 
-        if (!player.isSneaking()) return;
+        if (!player.isSneaking() || !player.getUniqueId().equals(ownerUUID)) return;
+
         switch (customChest.getType()) {
             case FRIEND_CHEST: {
                 event.setCancelled(true);
-                player.sendMessage("holaaa wapo");
+
             }
             break;
 
