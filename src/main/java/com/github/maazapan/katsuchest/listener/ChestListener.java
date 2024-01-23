@@ -1,10 +1,11 @@
 package com.github.maazapan.katsuchest.listener;
 
 import com.github.maazapan.katsuchest.KatsuChest;
+import com.github.maazapan.katsuchest.api.ChestOpenEvent;
 import com.github.maazapan.katsuchest.api.ChestPlaceEvent;
 import com.github.maazapan.katsuchest.chest.CustomChest;
-import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
+import com.github.maazapan.katsuchest.chest.types.FriendChest;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.block.Block;
@@ -36,16 +37,53 @@ public class ChestListener implements Listener {
         CustomChest customChest = event.getCustomChest();
         Player player = event.getPlayer();
 
-        if (customChest.getType() == ChestType.KEY_CHEST) {
-            ItemStack itemStack = new ItemBuilder()
-                    .fromConfig(plugin.getConfig(), "config.custom-chest.KEY_CHEST.chest-key")
-                    .toItemStack();
+        switch (customChest.getType()) {
 
-            NBTItem nbtItem = new NBTItem(itemStack);
-            nbtItem.setUUID("katsu_chest_uuid", customChest.getUUID());
-            nbtItem.applyNBT(itemStack);
+            // Then we give the player a key.
+            case KEY_CHEST: {
+                ItemStack itemStack = new ItemBuilder()
+                        .fromConfig(plugin.getConfig(), "config.custom-chest.KEY_CHEST.chest-key")
+                        .toItemStack();
 
-            player.getInventory().addItem(itemStack);
+                NBTItem nbtItem = new NBTItem(itemStack);
+                nbtItem.setUUID("katsu_chest_uuid", customChest.getUUID());
+                nbtItem.applyNBT(itemStack);
+
+                player.getInventory().addItem(itemStack);
+            }
+            break;
+
+            // Then we add the player to the friend's list.
+            case FRIEND_CHEST: {
+                ((FriendChest) customChest).getFriends().add(player.getUniqueId());
+            }
+            break;
+        }
+    }
+
+
+    /**
+     * Check if the player opens a custom chest
+     *
+     * @param event ChestOpenEvent
+     */
+    @EventHandler
+    public void onChestInteract(ChestOpenEvent event) {
+        CustomChest customChest = event.getCustomChest();
+        Player player = event.getPlayer();
+
+        if (!player.isSneaking()) return;
+        switch (customChest.getType()) {
+            case FRIEND_CHEST: {
+                event.setCancelled(true);
+                player.sendMessage("holaaa wapo");
+            }
+            break;
+
+            case KEY_CHEST: {
+                player.sendMessage("pendejo de mierda te crees que puedes abrirme? ja ja ja");
+            }
+            break;
         }
     }
 
@@ -95,6 +133,5 @@ public class ChestListener implements Listener {
                 event.setCancelled(true);
             }
         }
-
     }
 }

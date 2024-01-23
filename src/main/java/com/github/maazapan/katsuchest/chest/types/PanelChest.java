@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class PanelChest extends CustomChest {
 
-    private String password;
+    private String password = "123";
 
     public PanelChest(UUID uuid, UUID owner) {
         super(uuid, owner, ChestType.PANEL_CHEST);
@@ -28,7 +28,7 @@ public class PanelChest extends CustomChest {
 
     @Override
     public boolean canOpen(Player player) {
-        return false;
+        return true;
     }
 
     public String getPassword() {

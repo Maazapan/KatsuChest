@@ -2,7 +2,9 @@ package com.github.maazapan.katsuchest.commands;
 
 import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
+import com.github.maazapan.katsuchest.chest.gui.PanelGUI;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
+import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import org.bukkit.command.Command;
@@ -41,6 +43,21 @@ public class ChestCommand implements CommandExecutor, TabCompleter {
         }
 
         switch (args[0].toLowerCase()) {
+
+            case "reload": {
+                plugin.reloadConfig();
+                plugin.saveDefaultConfig();
+
+                player.sendMessage(KatsuUtils.coloredHex("&aReloaded config.yml"));
+            }
+            break;
+
+
+            case "test": {
+                new PanelGUI(player, plugin).init();
+            }
+            break;
+
             /*
              + Get an item chest at player.
              - Command: /katsuchest give <id_chest>

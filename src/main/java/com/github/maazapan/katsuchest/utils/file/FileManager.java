@@ -3,6 +3,7 @@ package com.github.maazapan.katsuchest.utils.file;
 import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -111,6 +112,17 @@ public class FileManager {
 
     public FileConfiguration toConfig(FileType fileType) {
         return YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/" + fileType.getFileName()));
+    }
+
+    public boolean getBoolean(String path) {
+
+        FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/" + fileType.getFileName()));
+        return config.getBoolean(path);
+    }
+
+    public ConfigurationSection getSection(String path) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/" + fileType.getFileName()));
+        return config.getConfigurationSection(path);
     }
 
     public void save() {

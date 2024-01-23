@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class KeyChest extends CustomChest {
 
-    private boolean requireKey;
+    private boolean requireKey = true;
 
     public KeyChest(UUID uuid, UUID owner) {
         super(uuid, owner, ChestType.KEY_CHEST);
@@ -24,6 +24,7 @@ public class KeyChest extends CustomChest {
 
     @Override
     public void open(Player player) {
+        // TODO: Open the chest.
 
     }
 
@@ -31,7 +32,6 @@ public class KeyChest extends CustomChest {
     public boolean canOpen(Player player) {
         ItemStack itemStack = player.getInventory().getItemInHand();
 
-        animation();
         if (itemStack.getType() != Material.AIR) {
             NBTItem nbtItem = new NBTItem(itemStack);
             UUID keyUUID = nbtItem.getUUID("katsu_chest_uuid");
@@ -65,5 +65,14 @@ public class KeyChest extends CustomChest {
                 i++;
             }
         }.countDownTask(4);
+    }
+
+
+    public boolean isRequireKey() {
+        return requireKey;
+    }
+
+    public void setRequireKey(boolean requireKey) {
+        this.requireKey = requireKey;
     }
 }

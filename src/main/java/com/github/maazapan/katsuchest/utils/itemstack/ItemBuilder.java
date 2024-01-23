@@ -139,7 +139,7 @@ public class ItemBuilder {
 
     public ItemBuilder setSkullBase64(String base64) {
         is = new ItemStack(Material.PLAYER_HEAD);
-        PlayerProfile profile = Bukkit.getServer().createPlayerProfile(UUID.randomUUID(), "Recycler Head");
+        PlayerProfile profile = Bukkit.getServer().createPlayerProfile(UUID.randomUUID(), "Katsu Head");
 
         try {
             profile.getTextures().setSkin(new URL(KatsuUtils.getURLFromBase64(base64)));
@@ -343,6 +343,7 @@ public class ItemBuilder {
         }
         return this;
     }
+
 
     /**
      * Retrieves the itemstack from the ItemBuilder.

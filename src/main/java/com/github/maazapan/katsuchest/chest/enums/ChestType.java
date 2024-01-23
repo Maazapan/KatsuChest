@@ -7,7 +7,6 @@ public enum ChestType {
     FRIEND_CHEST,
     CUSTOM;
 
-
     public static ChestType getByName(String name) {
         for (ChestType type : values()) {
             if (type.name().equalsIgnoreCase(name)) {

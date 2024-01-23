@@ -1,12 +1,16 @@
 package com.github.maazapan.katsuchest.listener;
 
 import com.github.maazapan.katsuchest.KatsuChest;
+import com.github.maazapan.katsuchest.api.ChestOpenEvent;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
+import com.github.maazapan.katsuchest.utils.gui.InventoryGUI;
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,7 +21,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -52,16 +58,21 @@ public class PlayerListener implements Listener {
             FileManager config = new FileManager(plugin, FileType.CONFIG);
 
             if (customChest == null) return;
-            // Check if the player can open the chest.
             if (!customChest.canOpen(player)) {
-                KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
                 event.setCancelled(true);
-
-                // Animate the chest.
+                KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
                 customChest.animation();
                 return;
             }
-            customChest.open(player);
+
+            ChestOpenEvent openEvent = new ChestOpenEvent(customChest, player);
+            Bukkit.getPluginManager().callEvent(openEvent);
+
+            event.setCancelled(openEvent.isCancelled());
+
+            if (!openEvent.isCancelled()) {
+                customChest.open(player);
+            }
         }
     }
 
@@ -116,16 +127,44 @@ public class PlayerListener implements Listener {
         if (chestManager.isCustomChest(block)) {
             UUID chestUUID = chestManager.getCustomChestUUID(block);
 
+            // Check if the chest is bugged remove it.
+            if (!chestManager.exists(chestUUID)) {
+                chestManager.removeChest(chestUUID, block.getLocation());
+                return;
+            }
+
             if (chestManager.isChestOwner(chestUUID, player.getUniqueId())) {
-                chestManager.removeChest(chestUUID, player.getUniqueId());
                 CustomChest customChest = chestManager.getCustomChest(chestUUID);
+                chestManager.removeChest(chestUUID, player.getUniqueId());
 
                 // Drop the custom chest item.
                 if (player.getGameMode() == GameMode.SURVIVAL) {
                     ItemStack itemStack = chestManager.getCustomChestItem(customChest.getType());
                     player.getWorld().dropItemNaturally(block.getLocation(), itemStack);
                 }
+            }
+        }
+    }
 
+    /**
+     * This method is called when a player clicks on a chest panel.
+     *
+     * @param event InventoryClickEvent
+     */
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        InventoryHolder inventoryHolder = event.getInventory().getHolder();
+        ItemStack itemStack = event.getCurrentItem();
+
+        if (itemStack != null && itemStack.getType() != Material.AIR) {
+            if (inventoryHolder instanceof InventoryGUI) {
+                InventoryGUI inventoryGUI = (InventoryGUI) inventoryHolder;
+                NBTItem nbtItem = new NBTItem(itemStack);
+
+                if (nbtItem.hasTag("katsu-chest-item")) event.setCancelled(true);
+
+                // Handle the click event.
+                inventoryGUI.onClick(event);
             }
         }
     }

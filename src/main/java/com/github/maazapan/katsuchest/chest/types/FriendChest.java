@@ -27,10 +27,9 @@ public class FriendChest extends CustomChest {
 
     }
 
-
     @Override
     public boolean canOpen(Player player) {
-        return false;
+        return friends.contains(player.getUniqueId());
     }
 
     public List<UUID> getFriends() {

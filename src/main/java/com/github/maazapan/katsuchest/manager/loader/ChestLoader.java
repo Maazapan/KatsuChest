@@ -8,7 +8,6 @@ import com.github.maazapan.katsuchest.chest.types.FriendChest;
 import com.github.maazapan.katsuchest.chest.types.KeyChest;
 import com.github.maazapan.katsuchest.chest.types.PanelChest;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
-import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -74,7 +73,16 @@ public class ChestLoader {
                     // Save chest friends.
                     if (chest.getType() == ChestType.FRIEND_CHEST) {
                         FriendChest friendChest = (FriendChest) chest;
-                        config.set(uuid + ".friends", friendChest.getFriends());
+                        List<String> friends = friendChest.getFriends().stream()
+                                .map(UUID::toString)
+                                .collect(Collectors.toList());
+
+                        config.set(uuid + ".friends", friends);
+                    }
+
+                    if (chest.getType() == ChestType.KEY_CHEST) {
+                        KeyChest keyChest = (KeyChest) chest;
+                        config.set(uuid + ".require-key", keyChest.isRequireKey());
                     }
                     config.save(file);
                 }
@@ -106,10 +114,50 @@ public class ChestLoader {
                 for (String key : config.getKeys(false)) {
                     UUID chestUUID = UUID.fromString(key);
 
-                    boolean locked = config.getBoolean(chestUUID + ".locked");
                     ChestType chestType = ChestType.valueOf(config.getString(chestUUID + ".type"));
+                    CustomChest customChest = null;
 
-                    CustomChest customChest = new KeyChest(chestUUID, ownerUUID);
+                    switch (chestType) {
+                        /*
+                         * If the chest is a key chest, then we load the require key.
+                         */
+                        case KEY_CHEST: {
+                            customChest = new KeyChest(chestUUID, ownerUUID);
+
+                            if (config.isSet(chestUUID + ".require-key")) {
+                                boolean requireKey = config.getBoolean(chestUUID + ".require-key");
+                                ((KeyChest) customChest).setRequireKey(requireKey);
+                            }
+                        }
+                        break;
+                        /*
+                         * If the chest is a panel chest, then we load the password.
+                         */
+                        case PANEL_CHEST: {
+                            customChest = new PanelChest(chestUUID, ownerUUID);
+
+                            if (config.isSet(chestUUID + ".password")) {
+                                String password = config.getString(chestUUID + ".password");
+                                ((PanelChest) customChest).setPassword(new String(Base64.getDecoder().decode(password)));
+                            }
+                        }
+                        break;
+                        /*
+                         * If the chest is a friend chest, then we load the friends.
+                         */
+                        case FRIEND_CHEST: {
+                            customChest = new FriendChest(chestUUID, ownerUUID);
+
+                            if (config.isSet(chestUUID + ".friends")) {
+                                List<UUID> friends = config.getStringList(chestUUID + ".friends")
+                                        .stream().map(UUID::fromString).collect(Collectors.toList());
+                                ((FriendChest) customChest).getFriends().addAll(friends);
+                            }
+                        }
+                        break;
+                    }
+
+                    boolean locked = config.getBoolean(chestUUID + ".locked");
                     customChest.setLocked(locked);
 
                     // Check if the chest has a location.
@@ -118,40 +166,8 @@ public class ChestLoader {
                         customChest.setLocation(KatsuUtils.stringToLocation(locationString));
                     }
 
-                    switch (chestType) {
-                        /*
-                         * If the chest is a panel chest, then we load the password.
-                         */
-                        case PANEL_CHEST: {
-                            PanelChest panelChest = (PanelChest) customChest;
-
-                            if (config.isSet(chestUUID + ".password")) {
-                                String password = config.getString(chestUUID + ".password");
-                                panelChest.setPassword(new String(Base64.getDecoder().decode(password)));
-                            }
-                            chestManager.addChest(chestUUID, panelChest);
-                        }
-                        break;
-
-                        /*
-                         * If the chest is a friend chest, then we load the friends.
-                         */
-                        case FRIEND_CHEST: {
-                            FriendChest friendChest = (FriendChest) customChest;
-
-                            if (config.isSet(chestUUID + ".friends")) {
-                                List<UUID> friends = config.getStringList(chestUUID + ".friends")
-                                        .stream().map(UUID::fromString).collect(Collectors.toList());
-                                friendChest.getFriends().addAll(friends);
-                            }
-                            chestManager.addChest(chestUUID, friendChest);
-                        }
-                        break;
-
-                        default:
-                            chestManager.addChest(chestUUID, customChest);
-                            break;
-                    }
+                    // Add the chest to the chest manager.
+                    chestManager.addChest(chestUUID, customChest);
                 }
             }
 

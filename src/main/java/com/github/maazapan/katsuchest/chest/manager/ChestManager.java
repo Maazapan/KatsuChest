@@ -4,19 +4,12 @@ import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.api.ChestPlaceEvent;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
-import com.github.maazapan.katsuchest.chest.types.KeyChest;
-import com.github.maazapan.katsuchest.chest.types.PanelChest;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,55 +52,14 @@ public class ChestManager {
      * @param chestType ChestType
      */
     public void placeCustomChest(Player player, Location location, ChestType chestType) {
-        location.getBlock().setType(Material.CHEST);
-
-        // Place the chest.
-        BlockFace facing = player.getFacing().getOppositeFace();
-
-        Chest chest = (Chest) location.getBlock().getState();
-        Directional directional = (Directional) chest.getBlockData();
-        directional.setFacing(facing);
-
-        chest.setBlockData(directional);
-        chest.update();
-
-        // Place the armor stand.
-        Location standLocation = location.clone().add(0.5, -0.45, 0.5);
-
-        standLocation.setYaw(KatsuUtils.getYawBlockFace(facing));
-        standLocation.add(standLocation.getDirection().multiply(0.3));
-
-        ArmorStand stand = location.getWorld().spawn(standLocation, ArmorStand.class, (ArmorStand armorStand) -> {
-            armorStand.setGravity(false);
-            armorStand.setSmall(true);
-            armorStand.setInvulnerable(true);
-            armorStand.setVisible(false);
-
-            ItemStack itemStack = new ItemBuilder()
-                    .fromConfig(plugin.getConfig(), "config.custom-chest." + chestType)
-                    .toItemStack();
-            armorStand.setHelmet(itemStack);
-        });
-        UUID chestUUID = UUID.randomUUID();
-
-        CustomChest customChest = chestType == ChestType.KEY_CHEST ?
-                new KeyChest(chestUUID, player.getUniqueId()) :
-                new PanelChest(chestUUID, player.getUniqueId());
-        customChest.setLocation(location);
-
-        // Set the NBT tags.
-        NBTEntity nbtEntity = new NBTEntity(stand);
-        nbtEntity.getPersistentDataContainer().setUUID("katsu_chest_uuid", chestUUID);
-
-        NBTBlock nbtBlock = new NBTBlock(location.getBlock());
-        nbtBlock.getData().setString("katsu_chest_type", chestType.toString());
-        nbtBlock.getData().setUUID("katsu_chest_uuid", chestUUID);
+        ChestCreator chestCreator = new ChestCreator(plugin);
+        CustomChest customChest = chestCreator.create(player, location, chestType);
 
         // Call the event.
         ChestPlaceEvent chestPlaceEvent = new ChestPlaceEvent(customChest, player);
         plugin.getServer().getPluginManager().callEvent(chestPlaceEvent);
 
-        chestMap.put(chestUUID, customChest);
+        chestMap.put(customChest.getUUID(), customChest);
     }
 
     /**
@@ -126,9 +78,23 @@ public class ChestManager {
         if (armorStand != null) {
             armorStand.remove();
         }
-
-
         chestMap.remove(chestUUID);
+    }
+
+
+    /**
+     * Remove a custom chest if the chest is not on the map.
+     * And you can use if the chest is a bug.
+     *
+     * @param chestUUID Chest UUID
+     * @param location  Block Location
+     */
+    public void removeChest(UUID chestUUID, Location location) {
+        ArmorStand armorStand = KatsuUtils.chestArmorStand(location, chestUUID);
+
+        if (armorStand != null) {
+            armorStand.remove();
+        }
     }
 
 
@@ -244,7 +210,22 @@ public class ChestManager {
         chestMap.put(chestUUID, customChest);
     }
 
+    /**
+     * Gets all the chests.
+     *
+     * @return List<CustomChest>
+     */
     public List<CustomChest> getChests() {
         return new ArrayList<>(chestMap.values());
+    }
+
+    /**
+     * Checks if the chest exists.
+     *
+     * @param chestUUID Chest UUID
+     * @return boolean
+     */
+    public boolean exists(UUID chestUUID) {
+        return chestMap.containsKey(chestUUID);
     }
 }

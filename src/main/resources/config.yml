@@ -27,6 +27,18 @@ config:
           - '&8| &7Place this chest     '
           - '&8| &7to get a key chest.  '
 
+    FRIEND_CHEST:
+      id: PLAYER_HEAD
+      texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGJjMmI1MmUwMzE5YjU0OTIzNjE3MzhlMDY0NDkzMDU2ZTQ3ZWI5NjMzNDYwNDY5ZmM4YWJlOWM2ODU0NmE4MSJ9fX0="
+
+      chest-item:
+        id: PLAYER_HEAD
+        texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGJjMmI1MmUwMzE5YjU0OTIzNjE3MzhlMDY0NDkzMDU2ZTQ3ZWI5NjMzNDYwNDY5ZmM4YWJlOWM2ODU0NmE4MSJ9fX0="
+        display_name: "&fFriend Chest"
+        lore:
+          - '&8| &7Place this chest     '
+          - '&8| &7to set friends list.  '
+
     PANEL_CHEST:
       id: PLAYER_HEAD
       texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2UyZDc5NjEyMDIzZTI3MGJjODk1MzI3MjliYzcxMWY5YjhmZGUwY2VhY2RjNTljOTc5ZTFiNDM2MzM3NGYifX19"
@@ -38,3 +50,15 @@ config:
         lore:
           - '&8| &7Place this chest       '
           - '&8| &7to get a panel chest.  '
+
+  inventory:
+    panel-chest:
+      inventory_type: DISPENSER
+      title: "Enter your Password..."
+
+      items:
+        '1':
+          id: PLAYER_HEAD
+          slot: 1
+          display_name: "&f1"
+
