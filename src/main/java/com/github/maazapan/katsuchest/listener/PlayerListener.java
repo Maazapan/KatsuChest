@@ -8,22 +8,19 @@ import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
-import com.github.maazapan.katsuchest.utils.gui.InventoryGUI;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -58,14 +55,14 @@ public class PlayerListener implements Listener {
             FileManager config = new FileManager(plugin, FileType.CONFIG);
 
             if (customChest == null) return;
-            if (!customChest.canOpen(player)) {
+            if (customChest.isLocked() && !customChest.canOpen(player)) {
                 event.setCancelled(true);
                 KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
                 customChest.animation();
                 return;
             }
 
-            ChestOpenEvent openEvent = new ChestOpenEvent(customChest, player);
+            ChestOpenEvent openEvent = new ChestOpenEvent(customChest, player, (Chest) block.getState());
             Bukkit.getPluginManager().callEvent(openEvent);
 
             event.setCancelled(openEvent.isCancelled());
@@ -141,31 +138,10 @@ public class PlayerListener implements Listener {
                 if (player.getGameMode() == GameMode.SURVIVAL) {
                     ItemStack itemStack = chestManager.getCustomChestItem(customChest.getType());
                     player.getWorld().dropItemNaturally(block.getLocation(), itemStack);
+                    event.setDropItems(false);
                 }
             }
         }
     }
 
-    /**
-     * This method is called when a player clicks on a chest panel.
-     *
-     * @param event InventoryClickEvent
-     */
-    @EventHandler
-    public void onClick(InventoryClickEvent event) {
-        InventoryHolder inventoryHolder = event.getInventory().getHolder();
-        ItemStack itemStack = event.getCurrentItem();
-
-        if (itemStack != null && itemStack.getType() != Material.AIR) {
-            if (inventoryHolder instanceof InventoryGUI) {
-                InventoryGUI inventoryGUI = (InventoryGUI) inventoryHolder;
-                NBTItem nbtItem = new NBTItem(itemStack);
-
-                if (nbtItem.hasTag("katsu-chest-item")) event.setCancelled(true);
-
-                // Handle the click event.
-                inventoryGUI.onClick(event);
-            }
-        }
-    }
 }

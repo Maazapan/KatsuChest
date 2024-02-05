@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class ChestLoader {
 
     private final KatsuChest plugin;
+    private boolean crashed = false;
 
     public ChestLoader(KatsuChest plugin) {
         this.plugin = plugin;
@@ -49,14 +50,20 @@ public class ChestLoader {
             }
 
             for (UUID ownerUUID : chestManager.getChestOwners()) {
+                List<CustomChest> customChests = chestManager.getChests(ownerUUID);
+
+                if (customChests.isEmpty()) continue;
                 File file = new File(plugin.getDataFolder() + "/data/" + ownerUUID + ".yml");
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-                for (CustomChest chest : chestManager.getChests(ownerUUID)) {
+                for (CustomChest chest : customChests) {
                     UUID uuid = chest.getUUID();
 
                     config.set(uuid + ".type", chest.getType().toString());
                     config.set(uuid + ".locked", chest.isLocked());
+
+                    config.set(uuid + ".redstone", chest.isRedstone());
+                    config.set(uuid + ".hopper", chest.isHopper());
 
                     // Save chest location.
                     if (chest.getLocation() != null) {
@@ -139,6 +146,7 @@ public class ChestLoader {
                             if (config.isSet(chestUUID + ".password")) {
                                 String password = config.getString(chestUUID + ".password");
                                 ((PanelChest) customChest).setPassword(new String(Base64.getDecoder().decode(password)));
+                                ((PanelChest) customChest).hasPassword(true);
                             }
                         }
                         break;
@@ -158,7 +166,12 @@ public class ChestLoader {
                     }
 
                     boolean locked = config.getBoolean(chestUUID + ".locked");
+                    boolean redstone = config.getBoolean(chestUUID + ".redstone");
+                    boolean hopper = config.getBoolean(chestUUID + ".hopper");
+
                     customChest.setLocked(locked);
+                    customChest.setRedstone(redstone);
+                    customChest.setHopper(hopper);
 
                     // Check if the chest has a location.
                     if (config.isSet(chestUUID + ".location")) {

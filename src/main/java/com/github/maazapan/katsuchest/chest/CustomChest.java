@@ -12,13 +12,20 @@ public abstract class CustomChest {
 
     private boolean locked;
 
+    private boolean redstone;
+    private boolean hopper;
+
     private final ChestType type;
     private final UUID uuid;
 
     private Location location;
+    private boolean open;
 
     public CustomChest(UUID uuid, UUID owner, ChestType type) {
         this.locked = true;
+        this.redstone = false;
+        this.hopper = false;
+        this.open = false;
         this.owner = owner;
         this.type = type;
         this.uuid = uuid;
@@ -50,6 +57,30 @@ public abstract class CustomChest {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+    
+    public boolean isRedstone() {
+        return redstone;
+    }
+    
+    public void setRedstone(boolean redstone) {
+        this.redstone = redstone;
+    }
+    
+    public boolean isHopper() {
+        return hopper;
+    }
+    
+    public void setHopper(boolean hopper) {
+        this.hopper = hopper;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
     abstract public void open(Player player);

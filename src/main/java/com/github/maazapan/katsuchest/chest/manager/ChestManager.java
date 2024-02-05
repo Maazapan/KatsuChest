@@ -10,6 +10,7 @@ import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -55,8 +56,10 @@ public class ChestManager {
         ChestCreator chestCreator = new ChestCreator(plugin);
         CustomChest customChest = chestCreator.create(player, location, chestType);
 
+        Chest chest = (Chest) location.getBlock().getState();
+
         // Call the event.
-        ChestPlaceEvent chestPlaceEvent = new ChestPlaceEvent(customChest, player);
+        ChestPlaceEvent chestPlaceEvent = new ChestPlaceEvent(customChest, player, chest);
         plugin.getServer().getPluginManager().callEvent(chestPlaceEvent);
 
         chestMap.put(customChest.getUUID(), customChest);
@@ -78,6 +81,8 @@ public class ChestManager {
         if (armorStand != null) {
             armorStand.remove();
         }
+
+
         chestMap.remove(chestUUID);
     }
 
@@ -134,6 +139,18 @@ public class ChestManager {
     public CustomChest getCustomChest(UUID uuid) {
         if (uuid == null) return null;
         return chestMap.get(uuid);
+    }
+
+
+    /**
+     * Get CustomChest from Block
+     * @param block Block
+     * @return CustomChest
+     */
+    public CustomChest getCustomChest(Block block) {
+        if (block == null) return null;
+        NBTBlock nbtBlock = new NBTBlock(block);
+        return chestMap.get(nbtBlock.getData().getUUID("katsu_chest_uuid"));
     }
 
     /**

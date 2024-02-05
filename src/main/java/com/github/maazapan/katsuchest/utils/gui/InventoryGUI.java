@@ -59,7 +59,14 @@ public abstract class InventoryGUI implements InventoryHolder {
                 }
 
                 nbtItem.applyNBT(itemStack);
-                inventory.setItem(slot, itemStack);
+
+                if (config.contains(path + ".items." + key + ".slots")) {
+                    for (Integer slots : config.toConfig().getIntegerList(path + ".items." + key + ".slots")) {
+                        inventory.setItem(slots, itemStack);
+                    }
+                } else {
+                    inventory.setItem(slot, itemStack);
+                }
             }
 
         } catch (Exception e) {
@@ -68,6 +75,11 @@ public abstract class InventoryGUI implements InventoryHolder {
         return this;
     }
 
+    /**
+     * Handle the click event
+     *
+     * @param event InventoryClickEvent
+     */
     public abstract void onClick(InventoryClickEvent event);
 
     public abstract void init();

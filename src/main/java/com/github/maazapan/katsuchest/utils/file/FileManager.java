@@ -120,6 +120,12 @@ public class FileManager {
         return config.getBoolean(path);
     }
 
+    public double getDouble(String path) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/" + fileType.getFileName()));
+        return config.getDouble(path);
+    }
+
+
     public ConfigurationSection getSection(String path) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/" + fileType.getFileName()));
         return config.getConfigurationSection(path);

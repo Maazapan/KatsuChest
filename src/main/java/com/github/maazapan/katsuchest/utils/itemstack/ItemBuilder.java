@@ -1,6 +1,7 @@
 package com.github.maazapan.katsuchest.utils.itemstack;
 
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -91,7 +92,7 @@ public class ItemBuilder {
      */
     public ItemBuilder setName(String name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        im.setDisplayName(KatsuUtils.coloredHex(name));
         is.setItemMeta(im);
         return this;
     }
@@ -131,6 +132,17 @@ public class ItemBuilder {
         try {
             SkullMeta im = (SkullMeta) is.getItemMeta();
             im.setOwner(owner);
+            is.setItemMeta(im);
+        } catch (ClassCastException expected) {
+        }
+        return this;
+    }
+
+
+    public ItemBuilder setSkullOwner(UUID owner) {
+        try {
+            SkullMeta im = (SkullMeta) is.getItemMeta();
+            im.setOwner(Bukkit.getOfflinePlayer(owner).getName());
             is.setItemMeta(im);
         } catch (ClassCastException expected) {
         }
@@ -341,7 +353,27 @@ public class ItemBuilder {
         if (config.contains(path + ".model_data")) {
             this.setModelData(config.getInt(path + ".model_data"));
         }
+
+        NBTItem nbtItem = new NBTItem(is);
+        if (config.contains(path + ".actions")) {
+            nbtItem.setObject("katsu-chest-action", config.getStringList(path + ".actions"));
+            nbtItem.applyNBT(is);
+        }
         return this;
+    }
+
+    public ItemStack replace(String replace, String replacement) {
+        ItemMeta meta = is.getItemMeta();
+
+        meta.setDisplayName(KatsuUtils.coloredHex(meta.getDisplayName().replace(replace, replacement)));
+
+        if (meta.hasLore()) {
+            List<String> lore = meta.getLore();
+            lore.replaceAll(s -> KatsuUtils.coloredHex(s.replace(replace, replacement)));
+            meta.setLore(lore);
+        }
+        is.setItemMeta(meta);
+        return is;
     }
 
 

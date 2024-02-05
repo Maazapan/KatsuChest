@@ -126,6 +126,7 @@ public class ChestCreator {
             armorStand.setGravity(false);
             armorStand.setSmall(true);
             armorStand.setInvulnerable(true);
+            armorStand.setMarker(true);
             armorStand.setVisible(false);
         });
     }

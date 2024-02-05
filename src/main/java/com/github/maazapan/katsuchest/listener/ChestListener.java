@@ -3,9 +3,16 @@ package com.github.maazapan.katsuchest.listener;
 import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.api.ChestOpenEvent;
 import com.github.maazapan.katsuchest.api.ChestPlaceEvent;
+import com.github.maazapan.katsuchest.api.ChestWrongPinEvent;
 import com.github.maazapan.katsuchest.chest.CustomChest;
+import com.github.maazapan.katsuchest.chest.enums.ChestType;
+import com.github.maazapan.katsuchest.chest.gui.FriendGUI;
+import com.github.maazapan.katsuchest.chest.gui.PanelGUI;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.chest.types.FriendChest;
+import com.github.maazapan.katsuchest.chest.types.PanelChest;
+import com.github.maazapan.katsuchest.utils.file.FileManager;
+import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.block.Block;
@@ -27,6 +34,23 @@ public class ChestListener implements Listener {
     public ChestListener(KatsuChest plugin) {
         this.plugin = plugin;
     }
+
+    /**
+     * This method is called when a player enters a wrong pin.
+     *
+     * @param event ChestWrongPinEvent
+     */
+    @EventHandler
+    public void onChestWrongPin(ChestWrongPinEvent event) {
+        FileManager config = new FileManager(plugin, FileType.CONFIG);
+        Player player = event.getPlayer();
+
+        if (config.getBoolean("config.damage-wrong-pin.enable")) {
+            double damage = config.getDouble("config.damage-wrong-pin.damage");
+            player.damage(damage);
+        }
+    }
+
 
     /**
      * This method is called when a player places a block.
@@ -55,6 +79,12 @@ public class ChestListener implements Listener {
             }
             break;
 
+            // If the chest is a panel chest, then we open the panel GUI.
+            case PANEL_CHEST: {
+                new PanelGUI(player, plugin, (PanelChest) customChest, event.getChest()).init();
+            }
+            break;
+
             // Then we add the player to the friend's list.
             case FRIEND_CHEST: {
                 ((FriendChest) customChest).getFriends().add(player.getUniqueId());
@@ -75,17 +105,25 @@ public class ChestListener implements Listener {
         Player player = event.getPlayer();
         UUID ownerUUID = customChest.getOwner();
 
+
+        if (customChest.getType() == ChestType.PANEL_CHEST) {
+            new PanelGUI(player, plugin, (PanelChest) customChest, event.getChest()).init();
+            event.setCancelled(true);
+            return;
+        }
+
         if (!player.isSneaking() || !player.getUniqueId().equals(ownerUUID)) return;
-
         switch (customChest.getType()) {
-            case FRIEND_CHEST: {
-                event.setCancelled(true);
 
+            case FRIEND_CHEST: {
+                new FriendGUI(player, plugin, (FriendChest) customChest).addPages().init();
+                event.setCancelled(true);
             }
             break;
 
-            case KEY_CHEST: {
-                player.sendMessage("pendejo de mierda te crees que puedes abrirme? ja ja ja");
+
+            case PANEL_CHEST: {
+
             }
             break;
         }

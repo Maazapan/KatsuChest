@@ -9,6 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.util.Base64;
 import java.util.UUID;
@@ -39,10 +40,11 @@ public class KatsuUtils {
     public static void parseSound(Player player, String sound) {
         String[] soundSplit = sound.split(";");
 
-        player.playSound(player.getLocation(),
+        player.getWorld().playSound(player.getLocation(),
                 Sound.valueOf(soundSplit[0]),
                 Float.parseFloat(soundSplit[1]),
-                Float.parseFloat(soundSplit[2]));
+                Float.parseFloat(soundSplit[2])
+        );
     }
 
     public static ArmorStand chestArmorStand(Location location, UUID chestUUID) {
@@ -95,5 +97,13 @@ public class KatsuUtils {
 
     public static Location center(Location location) {
         return location.add(0.5, 0, 0.5);
+    }
+
+    public static Vector rotateAroundY(double angle, Vector vector) {
+        double angleCos = Math.cos(angle);
+        double angleSin = Math.sin(angle);
+        double x = angleCos * vector.getX() + angleSin * vector.getZ();
+        double z = -angleSin * vector.getX() + angleCos * vector.getZ();
+        return vector.setX(x).setZ(z);
     }
 }

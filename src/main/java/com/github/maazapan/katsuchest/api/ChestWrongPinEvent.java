@@ -1,31 +1,31 @@
 package com.github.maazapan.katsuchest.api;
 
 import com.github.maazapan.katsuchest.chest.CustomChest;
+import com.github.maazapan.katsuchest.chest.types.PanelChest;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ChestOpenEvent extends Event implements Cancellable {
+import java.awt.*;
+
+public class ChestWrongPinEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private final CustomChest customChest;
+    private final PanelChest panelChest;
     private final Player player;
 
     private boolean cancelled;
-    private Chest chest;
 
-    public ChestOpenEvent(CustomChest customChest, Player player, Chest chest) {
-        this.customChest = customChest;
+    public ChestWrongPinEvent(PanelChest panelChest, Player player) {
+        this.panelChest = panelChest;
         this.player = player;
-        this.chest = chest;
         this.cancelled = false;
     }
 
-    public CustomChest getCustomChest() {
-        return customChest;
+    public PanelChest getPanelChest() {
+        return panelChest;
     }
 
     public Player getPlayer() {
@@ -36,23 +36,9 @@ public class ChestOpenEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public Chest getChest() {
-        return chest;
-    }
-
     @Override
     public HandlerList getHandlers() {
         return handlers;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
     }
 }
 
