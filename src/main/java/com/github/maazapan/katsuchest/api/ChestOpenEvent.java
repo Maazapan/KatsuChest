@@ -15,7 +15,7 @@ public class ChestOpenEvent extends Event implements Cancellable {
     private final Player player;
 
     private boolean cancelled;
-    private Chest chest;
+    private final Chest chest;
 
     public ChestOpenEvent(CustomChest customChest, Player player, Chest chest) {
         this.customChest = customChest;

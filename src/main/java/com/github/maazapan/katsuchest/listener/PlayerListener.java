@@ -5,7 +5,6 @@ import com.github.maazapan.katsuchest.api.ChestOpenEvent;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
-import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import org.bukkit.Bukkit;
@@ -52,24 +51,12 @@ public class PlayerListener implements Listener {
             UUID chestUUID = chestManager.getCustomChestUUID(block);
             CustomChest customChest = chestManager.getCustomChest(chestUUID);
 
-            FileManager config = new FileManager(plugin, FileType.CONFIG);
-
+            // If the custom chest is null, not continue.
             if (customChest == null) return;
-            if (customChest.isLocked() && !customChest.canOpen(player)) {
-                event.setCancelled(true);
-                KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
-                customChest.animation();
-                return;
-            }
-
             ChestOpenEvent openEvent = new ChestOpenEvent(customChest, player, (Chest) block.getState());
             Bukkit.getPluginManager().callEvent(openEvent);
 
             event.setCancelled(openEvent.isCancelled());
-
-            if (!openEvent.isCancelled()) {
-                customChest.open(player);
-            }
         }
     }
 

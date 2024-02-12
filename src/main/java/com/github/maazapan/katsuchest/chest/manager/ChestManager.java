@@ -12,8 +12,10 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,6 +45,31 @@ public class ChestManager {
         nbtItem.applyNBT(itemStack);
 
         return itemStack;
+    }
+
+    /**
+     * Get the chest key.
+     * @param customChest KeyChest
+     */
+    public void addChestKey(Player player, CustomChest customChest) {
+        ItemStack itemStack = new ItemBuilder()
+                .fromConfig(plugin.getConfig(), "config.custom-chest.KEY_CHEST.chest-key")
+                .toItemStack();
+
+        NBTItem nbtItem = new NBTItem(itemStack);
+        nbtItem.setUUID("katsu_chest_uuid", customChest.getUUID());
+        nbtItem.applyNBT(itemStack);
+
+        // If the player's inventory is full, then we drop the key.
+        if (player.getInventory().firstEmpty() == -1) {
+            Vector vector = player.getLocation().getDirection().multiply(0.2);
+            Location location = player.getLocation().add(0, 1.4, 0);
+
+            Item item = player.getWorld().dropItem(location, itemStack);
+            item.setVelocity(vector);
+            return;
+        }
+        player.getInventory().addItem(itemStack);
     }
 
     /**
@@ -81,8 +108,6 @@ public class ChestManager {
         if (armorStand != null) {
             armorStand.remove();
         }
-
-
         chestMap.remove(chestUUID);
     }
 

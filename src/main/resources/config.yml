@@ -1,25 +1,47 @@
 
+###################################################################################
+  #     _  __          _                    ____   _                    _       #
+  #    | |/ /   __ _  | |_   ___   _   _   / ___| | |__     ___   ___  | |_     #
+  #    | ' /   / _` | | __| / __| | | | | | |     | '_ \   / _ \ / __| | __|    #
+  #    | . \  | (_| | | |_  \__ \ | |_| | | |___  | | | | |  __/ \__ \ | |_     #
+  #    |_|\_\  \__,_|  \__| |___/  \__,_|  \____| |_| |_|  \___| |___/  \__|    #
+  #                                                                             #
+###################################################################################
+#-                      *\ Created by Katsutori Studio © /*                      -#
+###################################################################################
 config:
 
+  # You can modify the prefix found in each of the commands
+  # simply by changing the text.
   prefix: " &8▸ &a&l✔ &8| &f"
 
+  # Max chest player place
   max-place-chest: 3
+
+  # Max friends player adds at a friend chest, using a menu.
   max-friends: 4
+
+  # Max pin length for the panel chest.
   max-pin-length: 4
 
+  # Max key item per chest
+  max-key-item-per-chest: 1
 
+  # Damage the chest when the player enters the wrong pin,
+  # You can set the damage amount.
   damage-wrong-pin:
     enable: true
     damage: 3.0
 
-
+  # All sounds available in the plugin.
+  # You can find all available sounds on this page.
+  # Docs: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
   sound:
     locked-chest: BLOCK_CHAIN_BREAK;1;1
     max-digits: BLOCK_LEVER_CLICK;1;1.2
     add-digits: BLOCK_LEVER_CLICK;1;2
     reset-digits: BLOCK_LEVER_CLICK;1;1.4
     wrong-password: BLOCK_CHEST_LOCKED;1;1.8
-
 
   custom-chest:
     KEY_CHEST:
@@ -65,6 +87,135 @@ config:
           - '&8| &7to get a panel chest.  '
 
   inventory:
+    chest-gui:
+      title: "&8▸ Chest Options"
+      size: 45
+
+      password-item:
+        id: PLAYER_HEAD
+        texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2UyZDc5NjEyMDIzZTI3MGJjODk1MzI3MjliYzcxMWY5YjhmZGUwY2VhY2RjNTljOTc5ZTFiNDM2MzM3NGYifX19"
+        slot: 25
+        display_name: "&fChange Password      "
+        lore:
+          - "&8KatsuChest"
+          - ''
+          - ' &8| &7Change a password to'
+          - ' &8| &7lock the chest.'
+          - ''
+          - "&e▸ Click to change."
+        actions:
+          - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
+          - "[PASSWORD]"
+
+      friend-item:
+        id: PLAYER_HEAD
+        slot: 25
+        display_name: "&fFriends Chest        "
+        lore:
+          - "&8KatsuChest"
+          - ''
+          - ' &8| &7Set friends to'
+          - ' &8| &7access the chest.'
+          - ''
+          - "&e▸ Click to set."
+        actions:
+          - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
+          - "[FRIENDS]"
+
+      key-item:
+        id: TRIPWIRE_HOOK
+        slot: 25
+        display_name: "&fGet Key Chest        "
+        lore:
+          - "&8KatsuChest"
+          - ''
+          - ' &8| &7Get a key chest'
+          - ' &8| &7to open chest.  '
+          - ''
+          - ' &fAvailable: &a%amount%'
+          - ''
+          - "&e▸ Click to get key."
+        actions:
+          - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
+          - "[KEY]"
+
+      insert-item:
+        id: CAULDRON
+        slot: 23
+        display_name: "&fInsert Items  "
+        lore:
+          - "&8KatsuChest"
+          - ''
+          - ' &8| &7Insert items into'
+          - ' &8| &7the chest using hoppers.'
+          - ''
+          - ' &fStatus: %status%'
+          - ''
+          - "&e▸ Click to change."
+        actions:
+          - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
+          - "[INSERT]"
+
+      extract-item:
+        id: HOPPER
+        slot: 21
+        display_name: "&fExtract Items  "
+        lore:
+          - "&8KatsuChest"
+          - ''
+          - ' &8| &7Extract items from'
+          - ' &8| &7the chest using hoppers.'
+          - ''
+          - ' &fStatus: %status%'
+          - ''
+          - "&e▸ Click to change."
+        actions:
+          - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
+          - "[EXTRACT]"
+
+      lock-item:
+        id: PLAYER_HEAD
+        texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWMyZmYyNDRkZmM5ZGQzYTJjZWY2MzExMmU3NTAyZGM2MzY3YjBkMDIxMzI5NTAzNDdiMmI0NzlhNzIzNjZkZCJ9fX0="
+        slot: 19
+        display_name: "&fLock and Open Chest      "
+        lore:
+          - "&8KatsuChest"
+          - ''
+          - ' &8| &7Lock and open the chest to'
+          - ' &8| &7others players.'
+          - ''
+          - ' &fStatus: %status%'
+          - ''
+          - "&e▸ Click to change."
+        actions:
+          - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
+          - "[LOCK]"
+
+      items:
+        '1':
+          id: PLAYER_HEAD
+          slot: 40
+          texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc1NDgzNjJhMjRjMGZhODQ1M2U0ZDkzZTY4YzU5NjlkZGJkZTU3YmY2NjY2YzAzMTljMWVkMWU4NGQ4OTA2NSJ9fX0="
+          display_name: "&cClose Menu"
+          actions:
+            - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
+            - "[CLOSE]"
+        '2':
+          id: GRAY_STAINED_GLASS_PANE
+          slots:
+            - 0
+            - 1
+            - 2
+            - 6
+            - 7
+            - 8
+            - 38
+            - 37
+            - 36
+            - 42
+            - 43
+            - 44
+
     friends-chest:
       title: "&8▸ Select Friends"
       size: 54
@@ -102,6 +253,7 @@ config:
           texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc1NDgzNjJhMjRjMGZhODQ1M2U0ZDkzZTY4YzU5NjlkZGJkZTU3YmY2NjY2YzAzMTljMWVkMWU4NGQ4OTA2NSJ9fX0="
           display_name: "&cClose"
           actions:
+            - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
             - "[CLOSE]"
         '4':
           id: GRAY_STAINED_GLASS_PANE
@@ -169,6 +321,7 @@ config:
           texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc1NDgzNjJhMjRjMGZhODQ1M2U0ZDkzZTY4YzU5NjlkZGJkZTU3YmY2NjY2YzAzMTljMWVkMWU4NGQ4OTA2NSJ9fX0="
           display_name: "&cClose Panel "
           actions:
+            - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
             - '[CLOSE]'
         '4':
           id: PLAYER_HEAD

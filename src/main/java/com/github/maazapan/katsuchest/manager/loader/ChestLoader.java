@@ -62,8 +62,8 @@ public class ChestLoader {
                     config.set(uuid + ".type", chest.getType().toString());
                     config.set(uuid + ".locked", chest.isLocked());
 
-                    config.set(uuid + ".redstone", chest.isRedstone());
-                    config.set(uuid + ".hopper", chest.isHopper());
+                    config.set(uuid + ".extract", chest.isExtractContent());
+                    config.set(uuid + ".insert", chest.isInsertContent());
 
                     // Save chest location.
                     if (chest.getLocation() != null) {
@@ -89,7 +89,8 @@ public class ChestLoader {
 
                     if (chest.getType() == ChestType.KEY_CHEST) {
                         KeyChest keyChest = (KeyChest) chest;
-                        config.set(uuid + ".require-key", keyChest.isRequireKey());
+
+                        config.set(uuid + ".amount-key", keyChest.getKeyAmount());
                     }
                     config.save(file);
                 }
@@ -131,9 +132,9 @@ public class ChestLoader {
                         case KEY_CHEST: {
                             customChest = new KeyChest(chestUUID, ownerUUID);
 
-                            if (config.isSet(chestUUID + ".require-key")) {
-                                boolean requireKey = config.getBoolean(chestUUID + ".require-key");
-                                ((KeyChest) customChest).setRequireKey(requireKey);
+                            if (config.isSet(chestUUID + ".amount-key")) {
+                                int amountKey = config.getInt(chestUUID + ".amount-key");
+                                ((KeyChest) customChest).setKeyAmount(amountKey);
                             }
                         }
                         break;
@@ -166,12 +167,12 @@ public class ChestLoader {
                     }
 
                     boolean locked = config.getBoolean(chestUUID + ".locked");
-                    boolean redstone = config.getBoolean(chestUUID + ".redstone");
-                    boolean hopper = config.getBoolean(chestUUID + ".hopper");
+                    boolean insert = config.getBoolean(chestUUID + ".insert");
+                    boolean extract = config.getBoolean(chestUUID + ".extract");
 
                     customChest.setLocked(locked);
-                    customChest.setRedstone(redstone);
-                    customChest.setHopper(hopper);
+                    customChest.setExtractContent(extract);
+                    customChest.setInsertContent(insert);
 
                     // Check if the chest has a location.
                     if (config.isSet(chestUUID + ".location")) {

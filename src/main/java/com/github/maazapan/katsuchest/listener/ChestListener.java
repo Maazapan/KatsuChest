@@ -6,15 +6,14 @@ import com.github.maazapan.katsuchest.api.ChestPlaceEvent;
 import com.github.maazapan.katsuchest.api.ChestWrongPinEvent;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
-import com.github.maazapan.katsuchest.chest.gui.FriendGUI;
+import com.github.maazapan.katsuchest.chest.gui.ChestGUI;
 import com.github.maazapan.katsuchest.chest.gui.PanelGUI;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.chest.types.FriendChest;
 import com.github.maazapan.katsuchest.chest.types.PanelChest;
+import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
-import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +22,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
@@ -67,21 +65,14 @@ public class ChestListener implements Listener {
 
             // Then we give the player a key.
             case KEY_CHEST: {
-                ItemStack itemStack = new ItemBuilder()
-                        .fromConfig(plugin.getConfig(), "config.custom-chest.KEY_CHEST.chest-key")
-                        .toItemStack();
-
-                NBTItem nbtItem = new NBTItem(itemStack);
-                nbtItem.setUUID("katsu_chest_uuid", customChest.getUUID());
-                nbtItem.applyNBT(itemStack);
-
-                player.getInventory().addItem(itemStack);
+                ChestManager chestManager = plugin.getChestManager();
+                chestManager.addChestKey(player, customChest);
             }
             break;
 
             // If the chest is a panel chest, then we open the panel GUI.
             case PANEL_CHEST: {
-                new PanelGUI(player, plugin, (PanelChest) customChest, event.getChest()).init();
+                new PanelGUI(player, plugin, (PanelChest) customChest).init();
             }
             break;
 
@@ -105,27 +96,28 @@ public class ChestListener implements Listener {
         Player player = event.getPlayer();
         UUID ownerUUID = customChest.getOwner();
 
-
-        if (customChest.getType() == ChestType.PANEL_CHEST) {
-            new PanelGUI(player, plugin, (PanelChest) customChest, event.getChest()).init();
+        // If the player is sneaking and is the owner of the chest, then we open the chest GUI.
+        if (player.isSneaking() && player.getUniqueId().equals(ownerUUID)) {
             event.setCancelled(true);
+            new ChestGUI(player, plugin, customChest).init();
             return;
         }
 
-        if (!player.isSneaking() || !player.getUniqueId().equals(ownerUUID)) return;
-        switch (customChest.getType()) {
+        // If the custom chest is locked, then we check if the player can open it.
+        if (customChest.isLocked()) {
+            FileManager config = new FileManager(plugin, FileType.CONFIG);
 
-            case FRIEND_CHEST: {
-                new FriendGUI(player, plugin, (FriendChest) customChest).addPages().init();
+            if (!customChest.canOpen(player)) {
+                KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
+                customChest.animation();
                 event.setCancelled(true);
+                return;
             }
-            break;
 
-
-            case PANEL_CHEST: {
-
+            if (customChest.getType() == ChestType.PANEL_CHEST) {
+                event.setCancelled(true);
+                new PanelGUI(player, plugin, (PanelChest) customChest).init();
             }
-            break;
         }
     }
 
@@ -161,7 +153,8 @@ public class ChestListener implements Listener {
             Block block = destination.getLocation().getBlock();
 
             if (chestManager.isCustomChest(block)) {
-                event.setCancelled(true);
+                CustomChest customChest = chestManager.getCustomChest(block);
+                if (!customChest.isInsertContent()) event.setCancelled(true);
             }
             return;
         }
@@ -172,7 +165,8 @@ public class ChestListener implements Listener {
             Block block = source.getLocation().getBlock();
 
             if (chestManager.isCustomChest(block)) {
-                event.setCancelled(true);
+                CustomChest customChest = chestManager.getCustomChest(block);
+                if (!customChest.isExtractContent()) event.setCancelled(true);
             }
         }
     }

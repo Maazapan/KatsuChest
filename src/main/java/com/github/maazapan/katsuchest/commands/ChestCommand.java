@@ -2,19 +2,10 @@ package com.github.maazapan.katsuchest.commands;
 
 import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
-import com.github.maazapan.katsuchest.chest.gui.FriendGUI;
-import com.github.maazapan.katsuchest.chest.gui.PanelGUI;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.block.data.Directional;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -59,7 +50,12 @@ public class ChestCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage(KatsuUtils.coloredHex("&aReloaded config.yml"));
             }
             break;
-            
+
+
+            case "test": {
+
+            }
+            break;
 
             /*
              + Get an item chest at player.

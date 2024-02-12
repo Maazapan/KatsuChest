@@ -12,8 +12,8 @@ public abstract class CustomChest {
 
     private boolean locked;
 
-    private boolean redstone;
-    private boolean hopper;
+    private boolean extractContent;
+    private boolean insertContent;
 
     private final ChestType type;
     private final UUID uuid;
@@ -22,9 +22,10 @@ public abstract class CustomChest {
     private boolean open;
 
     public CustomChest(UUID uuid, UUID owner, ChestType type) {
+        this.insertContent = false;
+        this.extractContent = false;
+
         this.locked = true;
-        this.redstone = false;
-        this.hopper = false;
         this.open = false;
         this.owner = owner;
         this.type = type;
@@ -58,22 +59,24 @@ public abstract class CustomChest {
     public void setLocation(Location location) {
         this.location = location;
     }
-    
-    public boolean isRedstone() {
-        return redstone;
+
+
+    public boolean isExtractContent() {
+        return extractContent;
     }
-    
-    public void setRedstone(boolean redstone) {
-        this.redstone = redstone;
+
+    public void setExtractContent(boolean extraContent) {
+        this.extractContent = extraContent;
     }
-    
-    public boolean isHopper() {
-        return hopper;
+
+    public boolean isInsertContent() {
+        return insertContent;
     }
-    
-    public void setHopper(boolean hopper) {
-        this.hopper = hopper;
+
+    public void setInsertContent(boolean insertContent) {
+        this.insertContent = insertContent;
     }
+
 
     public boolean isOpen() {
         return open;

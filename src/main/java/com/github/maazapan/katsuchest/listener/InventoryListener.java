@@ -1,20 +1,15 @@
 package com.github.maazapan.katsuchest.listener;
 
 import com.github.maazapan.katsuchest.KatsuChest;
-import com.github.maazapan.katsuchest.chest.CustomChest;
-import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.utils.gui.InventoryGUI;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -76,10 +71,11 @@ public class InventoryListener implements Listener {
                             }
                             break;
 
+
                             // Play sound at player.
                             case "[SOUND]": {
                                 String[] b = actionSplit[1].split(";");
-                                player.playSound(player.getLocation(), b[0], Float.parseFloat(b[1]), Float.parseFloat(b[2]));
+                                player.playSound(player.getLocation(), Sound.valueOf(b[0]), Float.parseFloat(b[1]), Float.parseFloat(b[2]));
                             }
                             break;
 
@@ -88,6 +84,12 @@ public class InventoryListener implements Listener {
                             case "[NUMBER]":
                             case "[RESET]":
                             case "[CONFIRM]":
+                            case "[LOCK]":
+                            case "[EXTRACT]":
+                            case "[INSERT]":
+                            case "[KEY]":
+                            case "[FRIENDS]":
+                            case "[PASSWORD]":
                                 break;
 
                             default:

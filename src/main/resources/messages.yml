@@ -1,3 +1,15 @@
+
+###################################################################################
+  #     _  __          _                    ____   _                    _       #
+  #    | |/ /   __ _  | |_   ___   _   _   / ___| | |__     ___   ___  | |_     #
+  #    | ' /   / _` | | __| / __| | | | | | |     | '_ \   / _ \ / __| | __|    #
+  #    | . \  | (_| | | |_  \__ \ | |_| | | |___  | | | | |  __/ \__ \ | |_     #
+  #    |_|\_\  \__,_|  \__| |___/  \__,_|  \____| |_| |_|  \___| |___/  \__|    #
+  #                                                                             #
+###################################################################################
+#-                      *\ Created by Katsutori Studio © /*                      -#
+###################################################################################
+
 cant-open-chest: "&cYou can''t open this chest!"
 no-args: "&fPlease use &7/ktchest help &fto see the commands."
 no-permission: "&cYou dont have permission to do that."
@@ -7,3 +19,5 @@ max-chest-placed: "&cYou can't place more chest."
 give-chest: "&fYou have received a &a%chest% &fchest."
 chest-non-has-pin: "&cThis chest doesn't have a pin, open it again to place a pin.."
 chest-set-pin: "&fYou have set a pin to this chest. &7(%pin%)"
+max-keys: "&cYou can't get more keys to this chest."
+password-changed: "&fYou can now change the &7password &fof this chest."

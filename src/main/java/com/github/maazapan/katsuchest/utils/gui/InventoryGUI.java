@@ -88,6 +88,12 @@ public abstract class InventoryGUI implements InventoryHolder {
         player.openInventory(inventory);
     }
 
+    public void setItem(ItemStack itemStack, int slot) {
+        inventory.setItem(slot, itemStack);
+    }
+
+
+
     @Override
     public Inventory getInventory() {
         return inventory;

@@ -21,7 +21,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ItemBuilder {
+
     private ItemStack is;
+    private String path;
+    private FileConfiguration config;
 
     /**
      * Create a new ItemBuilder from scratch.
@@ -325,7 +328,10 @@ public class ItemBuilder {
     }
 
     public ItemBuilder fromConfig(FileConfiguration config, String path) {
-        is = new ItemStack(Material.valueOf(config.getString(path + ".id")));
+        this.path = path;
+        this.config = config;
+
+        this.is = new ItemStack(Material.valueOf(config.getString(path + ".id")));
 
         if (config.contains(path + ".texture")) {
             this.setSkullBase64(config.getString(path + ".texture"));
@@ -362,7 +368,8 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemStack replace(String replace, String replacement) {
+
+    public ItemBuilder replace(String replace, String replacement) {
         ItemMeta meta = is.getItemMeta();
 
         meta.setDisplayName(KatsuUtils.coloredHex(meta.getDisplayName().replace(replace, replacement)));
@@ -373,7 +380,11 @@ public class ItemBuilder {
             meta.setLore(lore);
         }
         is.setItemMeta(meta);
-        return is;
+        return this;
+    }
+
+    public int getSlot() {
+        return config.getInt(path + ".slot");
     }
 
 

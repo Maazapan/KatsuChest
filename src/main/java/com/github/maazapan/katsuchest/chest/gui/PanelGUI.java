@@ -10,6 +10,7 @@ import com.github.maazapan.katsuchest.utils.gui.InventoryGUI;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -25,19 +26,18 @@ public class PanelGUI extends InventoryGUI {
     private final FileManager config;
 
     private final int MAX_DIGITS;
-    private final Chest chest;
 
     private String password = "";
     private final KatsuChest plugin;
 
-    public PanelGUI(Player player, KatsuChest plugin, PanelChest panelChest, Chest chest) {
+    public PanelGUI(Player player, KatsuChest plugin, PanelChest panelChest) {
         super(plugin, "config.inventory.panel-chest");
         this.config = new FileManager(plugin, FileType.CONFIG);
         this.MAX_DIGITS = config.getInt("config.max-pin-length");
         this.panelChest = panelChest;
         this.plugin = plugin;
         this.player = player;
-        this.chest = chest;
+        ;
     }
 
     @Override
@@ -54,6 +54,7 @@ public class PanelGUI extends InventoryGUI {
                 String[] action = actions.split(": ");
 
                 switch (action[0]) {
+
                     // Check if the action is a number. If it is, check if the password length is less than the max digits.
                     case "[NUMBER]": {
                         String number = action[1];
@@ -88,7 +89,12 @@ public class PanelGUI extends InventoryGUI {
                         panelChest.hasPassword(true);
                         panelChest.setPassword(password);
 
-                        player.openInventory(chest.getInventory());
+                        Block block = panelChest.getLocation().getBlock();
+
+                        if (block.getState() instanceof Chest) {
+                            Chest chest = (Chest) block.getState();
+                            player.openInventory(chest.getInventory());
+                        }
                     }
                     break;
 
@@ -116,7 +122,8 @@ public class PanelGUI extends InventoryGUI {
 
         ItemStack itemStack = new ItemBuilder()
                 .fromConfig(config.toConfig(), "config.inventory.panel-chest.digits-display")
-                .replace("%pin%", formatPin());
+                .replace("%pin%", formatPin())
+                .toItemStack();
 
         getInventory().setItem(15, itemStack);
         this.open(player);

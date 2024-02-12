@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class KeyChest extends CustomChest {
 
-    private boolean requireKey = true;
+    private int keyAmount = 0;
 
     public KeyChest(UUID uuid, UUID owner) {
         super(uuid, owner, ChestType.KEY_CHEST);
@@ -25,7 +25,6 @@ public class KeyChest extends CustomChest {
     @Override
     public void open(Player player) {
         // TODO: Open the chest.
-
     }
 
     @Override
@@ -67,12 +66,11 @@ public class KeyChest extends CustomChest {
         }.countDownTask(4);
     }
 
-
-    public boolean isRequireKey() {
-        return requireKey;
+    public int getKeyAmount() {
+        return keyAmount;
     }
 
-    public void setRequireKey(boolean requireKey) {
-        this.requireKey = requireKey;
+    public void setKeyAmount(int keyAmount) {
+        this.keyAmount = keyAmount;
     }
 }
