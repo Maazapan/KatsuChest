@@ -1,6 +1,9 @@
 package com.github.maazapan.katsuchest.manager;
 
 import com.github.maazapan.katsuchest.KatsuChest;
+import com.github.maazapan.katsuchest.api.hooks.bstats.Metrics;
+import com.github.maazapan.katsuchest.api.hooks.update.Update;
+import com.github.maazapan.katsuchest.chest.manager.RecipeManager;
 import com.github.maazapan.katsuchest.commands.ChestCommand;
 import com.github.maazapan.katsuchest.listener.ChestListener;
 import com.github.maazapan.katsuchest.listener.InventoryListener;
@@ -17,11 +20,12 @@ public class LoaderManager {
         this.plugin = plugin;
     }
 
-
     public void load() {
         loadListener();
         loadCommands();
         loadFiles();
+        loadRecipes();
+        loadHooks();
 
         this.chestLoader = new ChestLoader(plugin);
         this.chestLoader.load();
@@ -51,5 +55,26 @@ public class LoaderManager {
     private void loadFiles() {
         new FileCreator("config.yml", plugin.getDataFolder().getPath(), plugin).create();
         new FileCreator("messages.yml", plugin.getDataFolder().getPath(), plugin).create();
+    }
+
+    /**
+     * Loads all the recipes.
+     */
+    private void loadRecipes() {
+        RecipeManager recipeManager = new RecipeManager(plugin);
+        recipeManager.registerRecipes();
+    }
+
+    private void loadHooks() {
+        Metrics metrics = new Metrics(plugin, 21066);
+
+        new Update(plugin, 115171).getVersion(version -> {
+            if (plugin.getDescription().getVersion().equals(version)) {
+                plugin.getLogger().info("There is not a new update available.");
+
+            } else {
+                plugin.getLogger().info("There is a new update available https://www.spigotmc.org/resources/115171");
+            }
+        });
     }
 }

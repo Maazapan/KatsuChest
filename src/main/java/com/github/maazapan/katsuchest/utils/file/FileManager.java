@@ -29,6 +29,15 @@ public class FileManager {
         this.prefix = plugin.getPrefix();
     }
 
+    public void reload() {
+        File file = new File(plugin.getDataFolder() + "/" + fileType.getFileName());
+        YamlConfiguration.loadConfiguration(file);
+
+        if (!file.exists()) {
+            plugin.saveResource(fileType.getFileName(), false);
+        }
+    }
+
     public int getInt(String path, FileType fileType) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/" + fileType.getFileName()));
         return config.getInt(path);

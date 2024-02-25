@@ -96,19 +96,27 @@ public class ChestListener implements Listener {
         Player player = event.getPlayer();
         UUID ownerUUID = customChest.getOwner();
 
+        FileManager config = new FileManager(plugin, FileType.CONFIG);
+
         // If the player is sneaking and is the owner of the chest, then we open the chest GUI.
         if (player.isSneaking() && player.getUniqueId().equals(ownerUUID)) {
-            event.setCancelled(true);
+            KatsuUtils.parseSound(player, config.get("config.sound.open-chest"));
             new ChestGUI(player, plugin, customChest).init();
+
+            event.setCancelled(true);
             return;
         }
 
         // If the custom chest is locked, then we check if the player can open it.
         if (customChest.isLocked()) {
-            FileManager config = new FileManager(plugin, FileType.CONFIG);
-
             if (!customChest.canOpen(player)) {
-                KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
+                if (customChest.getType() == ChestType.KEY_CHEST) {
+                    KatsuUtils.parseSound(player, config.get("config.sound.locked-chest"));
+
+                } else if ( customChest.getType() == ChestType.FRIEND_CHEST) {
+                    KatsuUtils.parseSound(player, config.get("config.sound.locked-friends"));
+                }
+
                 customChest.animation();
                 event.setCancelled(true);
                 return;

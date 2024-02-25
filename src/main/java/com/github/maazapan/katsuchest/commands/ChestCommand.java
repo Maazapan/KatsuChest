@@ -6,6 +6,7 @@ import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,69 +29,96 @@ public class ChestCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!(sender instanceof Player)) {
-            plugin.getLogger().info("Only players can use this command!");
-            return true;
-        }
-
-        FileManager config = new FileManager(plugin, FileType.MESSAGES);
-        Player player = (Player) sender;
+        FileManager messages = new FileManager(plugin, FileType.MESSAGES);
+        FileManager config = new FileManager(plugin, FileType.CONFIG);
 
         if (!(args.length > 0)) {
-            player.sendMessage(config.getWithPrefix("no-args"));
+            sender.sendMessage(messages.getWithPrefix("no-args"));
             return true;
         }
 
         switch (args[0].toLowerCase()) {
 
-            case "reload": {
-                plugin.reloadConfig();
-                plugin.saveDefaultConfig();
+            case "help": {
+                if (!sender.hasPermission("katsuchest.command.help")) {
+                    sender.sendMessage(messages.getWithPrefix("no-permission"));
+                    return true;
+                }
 
-                player.sendMessage(KatsuUtils.coloredHex("&aReloaded config.yml"));
+                for (String string : messages.getStringList("help-list")) {
+                    sender.sendMessage(KatsuUtils.coloredHex(string)
+                            .replaceAll("%prefix%", plugin.getPrefix())
+                            .replaceAll("%version%", plugin.getDescription().getVersion()));
+                }
             }
             break;
 
+            /*
+             + Reload all plugin configs.
+             - Command: /katsuchest reload
+             */
+            case "reload": {
+                if (!sender.hasPermission("katsuchest.command.reload")) {
+                    sender.sendMessage(messages.getWithPrefix("no-permission"));
+                    return true;
+                }
 
-            case "test": {
+                plugin.reloadConfig();
+                plugin.saveDefaultConfig();
 
+                messages.reload();
+
+                sender.sendMessage(messages.getWithPrefix("reload"));
             }
             break;
 
             /*
              + Get an item chest at player.
              - Command: /katsuchest give <id_chest>
+             - Command: /katsuchest give <id_chest> <player>
              */
             case "give": {
-                if (!player.hasPermission("katsuchest.command.give")) {
-                    player.sendMessage(config.getWithPrefix("no-permission"));
+                if (!sender.hasPermission("katsuchest.command.give")) {
+                    sender.sendMessage(messages.getWithPrefix("no-permission"));
                     return true;
                 }
 
                 if (!(args.length > 1)) {
-                    player.sendMessage(config.getWithPrefix("no-args-give"));
+                    sender.sendMessage(messages.getWithPrefix("no-args-give"));
                     return true;
                 }
 
                 ChestType chestType = ChestType.getByName(args[1]);
 
                 if (chestType == null) {
-                    player.sendMessage(config.getWithPrefix("no-exist-chest"));
+                    sender.sendMessage(messages.getWithPrefix("no-exist-chest"));
                     return true;
                 }
 
                 ChestManager chestManager = plugin.getChestManager();
                 ItemStack itemStack = chestManager.getCustomChestItem(chestType);
 
-                player.getInventory().addItem(itemStack);
-                player.sendMessage(config.getWithPrefix("give-chest")
-                        .replace("%chest%", chestType.toString()));
+                // If the player is specified, give the chest to the player.
+                if (args.length > 2) {
+                    if (Bukkit.getPlayer(args[2]) == null) {
+                        sender.sendMessage(messages.getWithPrefix("no-exist-player"));
+                        return true;
+                    }
+
+                    Player player = Bukkit.getPlayer(args[2]);
+                    player.getInventory().addItem(itemStack);
+
+                } else {
+                    Player player = (Player) sender;
+                    player.getInventory().addItem(itemStack);
+                }
+                sender.sendMessage(messages.getWithPrefix("give-chest").replace("%chest%", chestType.toString()));
             }
             break;
 
 
             default:
-                player.sendMessage(config.getWithPrefix("no-args"));
+                sender.sendMessage(messages.getWithPrefix("no-args"));
                 break;
         }
         return false;
@@ -104,7 +132,7 @@ public class ChestCommand implements CommandExecutor, TabCompleter {
                 .collect(Collectors.toList());
 
         if (args.length > 0) {
-            if (args[0].equalsIgnoreCase("give")) {
+            if (args.length == 2 && args[0].equalsIgnoreCase("give")) {
                 return chestTypes;
             }
             if (args.length == 1) return subCommands;

@@ -36,15 +36,10 @@ public class ChestManager {
      * @return ItemStack Custom Chest
      */
     public ItemStack getCustomChestItem(ChestType chestType) {
-        ItemStack itemStack = new ItemBuilder()
+        return new ItemBuilder()
                 .fromConfig(plugin.getConfig(), "config.custom-chest." + chestType + ".chest-item")
+                .setNBT("katsu_chest_type", chestType.toString())
                 .toItemStack();
-
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setString("katsu_chest_type", chestType.toString());
-        nbtItem.applyNBT(itemStack);
-
-        return itemStack;
     }
 
     /**
@@ -52,13 +47,20 @@ public class ChestManager {
      * @param customChest KeyChest
      */
     public void addChestKey(Player player, CustomChest customChest) {
+        String x = String.valueOf(customChest.getLocation().getBlockX());
+        String y = String.valueOf(customChest.getLocation().getBlockY());
+        String z = String.valueOf(customChest.getLocation().getBlockZ());
+
+        String world = customChest.getLocation().getWorld().getName();
+
         ItemStack itemStack = new ItemBuilder()
                 .fromConfig(plugin.getConfig(), "config.custom-chest.KEY_CHEST.chest-key")
+                .replace("%x%", x)
+                .replace("%y%", y)
+                .replace("%z%", z)
+                .replace("%world%", world)
+                .setNBT("katsu_chest_uuid", customChest.getUUID())
                 .toItemStack();
-
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setUUID("katsu_chest_uuid", customChest.getUUID());
-        nbtItem.applyNBT(itemStack);
 
         // If the player's inventory is full, then we drop the key.
         if (player.getInventory().firstEmpty() == -1) {

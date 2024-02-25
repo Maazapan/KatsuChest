@@ -46,7 +46,7 @@ public class ChestGUI extends InventoryGUI {
 
                     // Open the friend GUI.
                     case "[FRIENDS]": {
-                        new FriendGUI(player, plugin, (FriendChest) customChest).init();
+                        new FriendGUI(player, plugin, (FriendChest) customChest).addPages().init();
                     }
                     break;
 
@@ -75,18 +75,21 @@ public class ChestGUI extends InventoryGUI {
                     }
                     break;
 
+                    // Disable or enable the insertion of items.
                     case "[INSERT]": {
                         customChest.setInsertContent(!customChest.isInsertContent());
                         init();
                     }
                     break;
 
+                    // Disable or enable the extraction of items.
                     case "[EXTRACT]": {
                         customChest.setExtractContent(!customChest.isExtractContent());
                         init();
                     }
                     break;
 
+                    // Lock the chest.
                     case "[LOCK]": {
                         customChest.setLocked(!customChest.isLocked());
                         init();

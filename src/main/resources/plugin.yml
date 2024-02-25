@@ -4,6 +4,7 @@ main: com.github.maazapan.katsuchest.KatsuChest
 api-version: 1.16
 softdepend:
   - MultiverseCore
+  - WorldGuard
 
 commands:
   katsuchest:

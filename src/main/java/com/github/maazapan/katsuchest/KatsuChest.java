@@ -38,4 +38,8 @@ public final class KatsuChest extends JavaPlugin {
     public static KatsuChest getInstance() {
         return instance;
     }
+
+    public LoaderManager getLoaderManager() {
+        return loaderManager;
+    }
 }

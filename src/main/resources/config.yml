@@ -13,7 +13,7 @@ config:
 
   # You can modify the prefix found in each of the commands
   # simply by changing the text.
-  prefix: " &8▸ &a&l✔ &8| &f"
+  prefix: " &8▸ &a&l✔ &8| #ff4e4e&lᴋ#ff4e4e&lᴛ#ff4e4e&lᴄ#ff4e4e&lʜ#ff4e4e&lᴇ#ff4e4e&ls#ff4e4e&lᴛ &8: "
 
   # Max chest player place
   max-place-chest: 3
@@ -37,23 +37,54 @@ config:
   # You can find all available sounds on this page.
   # Docs: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
   sound:
+    open-chest: BLOCK_CHEST_OPEN;1;0.8
     locked-chest: BLOCK_CHAIN_BREAK;1;1
+    locked-friends: BLOCK_CHEST_LOCKED;1;1.1
     max-digits: BLOCK_LEVER_CLICK;1;1.2
     add-digits: BLOCK_LEVER_CLICK;1;2
+    remove-friends: BLOCK_LEVER_CLICK;1;1.6
+    add-friends: BLOCK_LEVER_CLICK;1;2.0
     reset-digits: BLOCK_LEVER_CLICK;1;1.4
     wrong-password: BLOCK_CHEST_LOCKED;1;1.8
 
   custom-chest:
+
+    # The key chest is a chest that can be opened with a chest block.
     KEY_CHEST:
       id: PLAYER_HEAD
       texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q4NzZmODJkNTNjNmIxM2Q4OGViMjFiZTMyMTE5ZjFhYWI2MzFkZGY2ZjZhZTlkNmJjMzc0MmVkMWRlYSJ9fX0="
 
+      # - The key chest key is an item that can be used to open a key chest.
+      # You can change the item id, display name, and lore.
       chest-key:
         id: TRIPWIRE_HOOK
-        display_name: "&fKey Chest Key"
+        display_name: "&fKey Chest Key      "
         lore:
-          - "&8| &7Use this key to open a key chest."
+          - "&8KatsuChest"
+          - ""
+          - " &8| &7Use this key to "
+          - " &8| &7open a key chest."
+          - " "
+          - "&8(X: %x% Y: %y% Z: %z%) "
 
+      # - Craft recipe for the key chest:
+      # The pattern is a 3x3 grid, and the ingredients are the items.
+      # You can find all available materials on this page.
+      #
+      # Docs: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+      craft-recipe:
+        enable: true
+        pattern:
+          - "$ $ $"
+          - "A K E"
+          - "$ $ $"
+        ingredients:
+          'A': IRON_INGOT
+          'E': TRIPWIRE_HOOK
+          'K': CHEST
+
+      # - The chest item is the item that will be placed in the world.
+      # You can change the item id, display name, and lore.
       chest-item:
         id: PLAYER_HEAD
         texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q4NzZmODJkNTNjNmIxM2Q4OGViMjFiZTMyMTE5ZjFhYWI2MzFkZGY2ZjZhZTlkNmJjMzc0MmVkMWRlYSJ9fX0="
@@ -64,11 +95,22 @@ config:
 
     FRIEND_CHEST:
       id: PLAYER_HEAD
-      texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGJjMmI1MmUwMzE5YjU0OTIzNjE3MzhlMDY0NDkzMDU2ZTQ3ZWI5NjMzNDYwNDY5ZmM4YWJlOWM2ODU0NmE4MSJ9fX0="
+      texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjdhNjYzNmQ5NmQwOGY2MTkzOWE2MGY1N2VlMGQwMjk5YzBiZDI3M2IyYmQzMGMxZWZlNGY3NGU0MzNhIn19fQ=="
+
+      craft-recipe:
+        enable: true
+        pattern:
+          - "$ A $"
+          - "E K E"
+          - "$ A $"
+        ingredients:
+          'A': IRON_BLOCK
+          'E': AMETHYST_SHARD
+          'K': CHEST
 
       chest-item:
         id: PLAYER_HEAD
-        texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGJjMmI1MmUwMzE5YjU0OTIzNjE3MzhlMDY0NDkzMDU2ZTQ3ZWI5NjMzNDYwNDY5ZmM4YWJlOWM2ODU0NmE4MSJ9fX0="
+        texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjdhNjYzNmQ5NmQwOGY2MTkzOWE2MGY1N2VlMGQwMjk5YzBiZDI3M2IyYmQzMGMxZWZlNGY3NGU0MzNhIn19fQ=="
         display_name: "&fFriend Chest"
         lore:
           - '&8| &7Place this chest     '
@@ -78,6 +120,17 @@ config:
       id: PLAYER_HEAD
       texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2UyZDc5NjEyMDIzZTI3MGJjODk1MzI3MjliYzcxMWY5YjhmZGUwY2VhY2RjNTljOTc5ZTFiNDM2MzM3NGYifX19"
 
+      craft-recipe:
+        enable: true
+        pattern:
+          - "$ A $"
+          - "E K E"
+          - "$ A $"
+        ingredients:
+          'A': IRON_BLOCK
+          'E': IRON_BARS
+          'K': CHEST
+
       chest-item:
         id: PLAYER_HEAD
         texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2UyZDc5NjEyMDIzZTI3MGJjODk1MzI3MjliYzcxMWY5YjhmZGUwY2VhY2RjNTljOTc5ZTFiNDM2MzM3NGYifX19"
@@ -86,15 +139,19 @@ config:
           - '&8| &7Place this chest       '
           - '&8| &7to get a panel chest.  '
 
+  # - Inventory settings
+  # You can change the title, size, and items in the inventory.
+  # You can also change the item id, display name, lore, and actions.
+  # The actions are the actions that will be executed when the player clicks on the item.
   inventory:
     chest-gui:
-      title: "&8▸ Chest Options"
-      size: 45
+      title: "Chest Options"
+      size: 36
 
       password-item:
         id: PLAYER_HEAD
         texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2UyZDc5NjEyMDIzZTI3MGJjODk1MzI3MjliYzcxMWY5YjhmZGUwY2VhY2RjNTljOTc5ZTFiNDM2MzM3NGYifX19"
-        slot: 25
+        slot: 16
         display_name: "&fChange Password      "
         lore:
           - "&8KatsuChest"
@@ -109,7 +166,7 @@ config:
 
       friend-item:
         id: PLAYER_HEAD
-        slot: 25
+        slot: 16
         display_name: "&fFriends Chest        "
         lore:
           - "&8KatsuChest"
@@ -117,14 +174,14 @@ config:
           - ' &8| &7Set friends to'
           - ' &8| &7access the chest.'
           - ''
-          - "&e▸ Click to set."
+          - "&e▸ Click to change."
         actions:
           - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
           - "[FRIENDS]"
 
       key-item:
         id: TRIPWIRE_HOOK
-        slot: 25
+        slot: 16
         display_name: "&fGet Key Chest        "
         lore:
           - "&8KatsuChest"
@@ -141,7 +198,7 @@ config:
 
       insert-item:
         id: CAULDRON
-        slot: 23
+        slot: 14
         display_name: "&fInsert Items  "
         lore:
           - "&8KatsuChest"
@@ -158,7 +215,7 @@ config:
 
       extract-item:
         id: HOPPER
-        slot: 21
+        slot: 12
         display_name: "&fExtract Items  "
         lore:
           - "&8KatsuChest"
@@ -176,7 +233,7 @@ config:
       lock-item:
         id: PLAYER_HEAD
         texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWMyZmYyNDRkZmM5ZGQzYTJjZWY2MzExMmU3NTAyZGM2MzY3YjBkMDIxMzI5NTAzNDdiMmI0NzlhNzIzNjZkZCJ9fX0="
-        slot: 19
+        slot: 10
         display_name: "&fLock and Open Chest      "
         lore:
           - "&8KatsuChest"
@@ -194,9 +251,9 @@ config:
       items:
         '1':
           id: PLAYER_HEAD
-          slot: 40
+          slot: 31
           texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc1NDgzNjJhMjRjMGZhODQ1M2U0ZDkzZTY4YzU5NjlkZGJkZTU3YmY2NjY2YzAzMTljMWVkMWU4NGQ4OTA2NSJ9fX0="
-          display_name: "&cClose Menu"
+          display_name: "&cClose"
           actions:
             - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
             - "[CLOSE]"
@@ -206,31 +263,39 @@ config:
             - 0
             - 1
             - 2
+            - 3
+            - 4
+            - 5
             - 6
             - 7
             - 8
-            - 38
-            - 37
-            - 36
-            - 42
-            - 43
-            - 44
+            - 29
+            - 28
+            - 27
+            - 34
+            - 33
+            - 35
 
     friends-chest:
-      title: "&8▸ Select Friends"
+      title: "&8Select Friends"
       size: 54
+
+      empty-players:
+        id: BARRIER
+        slot: 22
+        display_name: "&cNo players found."
 
       friend-item:
         id: PLAYER_HEAD
-        display_name: "&a&l✔ &8⋮ &f%player_name%"
+        display_name: " &a&l✔ &8| &f%player_name%"
         lore:
-          - "&8| &7Click to remove this player."
+          - "&e▸ Click to remove access."
 
       not-friend-item:
         id: PLAYER_HEAD
-        display_name: "&c&l✘ &8⋮ &f%player_name%"
+        display_name: " &c&l✘ &8| &f%player_name%"
         lore:
-          - "&8| &7Click to add this player."
+          - "&e▸ Click to add access."
 
       items:
         '1':
@@ -247,6 +312,14 @@ config:
           display_name: "#BABABAPrevious"
           actions:
             - "[PREVIOUS_PAGE]"
+        '6':
+          id: PLAYER_HEAD
+          slot: 45
+          texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmIwZjZlOGFmNDZhYzZmYWY4ODkxNDE5MWFiNjZmMjYxZDY3MjZhNzk5OWM2MzdjZjJlNDE1OWZlMWZjNDc3In19fQ=="
+          display_name: "#BABABABack Menu"
+          actions:
+            - "[SOUND]: BLOCK_LEVER_CLICK;1;1"
+            - "[BACK]"
         '3':
           id: PLAYER_HEAD
           slot: 49
@@ -270,7 +343,6 @@ config:
             - 52
             - 53
             - 46
-            - 45
         '5':
           id: LIGHT_GRAY_STAINED_GLASS_PANE
           slots:

@@ -11,13 +11,25 @@
 ###################################################################################
 
 cant-open-chest: "&cYou can''t open this chest!"
-no-args: "&fPlease use &7/ktchest help &fto see the commands."
+no-args: "&fPlease use &e/ktchest help &fto see the commands."
+reload: "&fThe plugin has been &ereloaded."
+no-exist-player: "&cThis player doesn't exist."
 no-permission: "&cYou dont have permission to do that."
-no-args-give: "&fPlease use &7/ktchest give <id_chest> &fto give a chest."
+no-args-give: "&fPlease use &e/ktchest give <id_chest> <player> &fto give a chest."
 no-exist-chest: "&cThis chest doesn''t exist."
 max-chest-placed: "&cYou can't place more chest."
-give-chest: "&fYou have received a &a%chest% &fchest."
+give-chest: "&fYou have received a &e%chest% &fchest."
 chest-non-has-pin: "&cThis chest doesn't have a pin, open it again to place a pin.."
 chest-set-pin: "&fYou have set a pin to this chest. &7(%pin%)"
 max-keys: "&cYou can't get more keys to this chest."
-password-changed: "&fYou can now change the &7password &fof this chest."
+remove-friend: "&fYou have removed &e%player_name% &ffrom the friends list."
+add-friend: "&fYou have added &e%player_name% &fto the friends list."
+password-changed: "&fYou can now change the &epassword &fof this chest."
+help-list:
+  - ''
+  - '       #ff4e4e&lᴋ#ff4e4e&lᴛ#ff4e4e&lᴄ#ff4e4e&lʜ#ff4e4e&lᴇ#ff4e4e&ls#ff4e4e&lᴛ &7(%version%) &8Katsutori Studio ©'
+  - ''
+  - ' &8- &e/ktc reload &8| &fReload all config files.'
+  - ' &8- &e/ktc help &8| &fShow this help.'
+  - ' &8- &e/ktc give <id_chest> <player> &8| &fGive a chest to a player.'
+  - ''

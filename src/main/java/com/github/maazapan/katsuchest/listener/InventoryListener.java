@@ -87,6 +87,7 @@ public class InventoryListener implements Listener {
                             case "[LOCK]":
                             case "[EXTRACT]":
                             case "[INSERT]":
+                            case "[BACK]":
                             case "[KEY]":
                             case "[FRIENDS]":
                             case "[PASSWORD]":

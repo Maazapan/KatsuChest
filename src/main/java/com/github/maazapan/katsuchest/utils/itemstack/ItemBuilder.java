@@ -152,6 +152,21 @@ public class ItemBuilder {
         return this;
     }
 
+
+    public ItemBuilder setNBT(String key, String value){
+        NBTItem nbtItem = new NBTItem(is);
+        nbtItem.setString(key, value);
+        nbtItem.applyNBT(is);
+        return this;
+    }
+
+    public ItemBuilder setNBT(String key, UUID value){
+        NBTItem nbtItem = new NBTItem(is);
+        nbtItem.setUUID(key, value);
+        nbtItem.applyNBT(is);
+        return this;
+    }
+
     public ItemBuilder setSkullBase64(String base64) {
         is = new ItemStack(Material.PLAYER_HEAD);
         PlayerProfile profile = Bukkit.getServer().createPlayerProfile(UUID.randomUUID(), "Katsu Head");

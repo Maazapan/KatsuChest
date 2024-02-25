@@ -2,6 +2,7 @@ package com.github.maazapan.katsuchest.listener;
 
 import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.api.ChestOpenEvent;
+import com.github.maazapan.katsuchest.api.hooks.WorldGuardUtils;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
@@ -48,6 +49,10 @@ public class PlayerListener implements Listener {
 
         // If the block is a custom chest, then we check if the player can open it.
         if (chestManager.isCustomChest(block)) {
+            if (WorldGuardUtils.hasWorldGuard() && !WorldGuardUtils.canInteract(player, block.getLocation())) {
+                event.setCancelled(true);
+                return;
+            }
             UUID chestUUID = chestManager.getCustomChestUUID(block);
             CustomChest customChest = chestManager.getCustomChest(chestUUID);
 
@@ -73,20 +78,25 @@ public class PlayerListener implements Listener {
 
         if (event.isCancelled() || itemStack.getType() == Material.AIR) return;
         ChestManager chestManager = plugin.getChestManager();
+        Location location = event.getBlock().getLocation();
 
         // If the item is a custom chest, then we create a new custom chest.
         if (chestManager.isCustomChest(itemStack)) {
-            FileManager fileManager = new FileManager(plugin);
-            int maxChests = fileManager.getInt("config.max-place-chest", FileType.CONFIG);
-
-            if (chestManager.getAmountChestPlaced(player.getUniqueId()) >= maxChests) {
-                player.sendMessage(fileManager.get("max-chest-placed", FileType.MESSAGES));
+            if (WorldGuardUtils.hasWorldGuard() && !WorldGuardUtils.canPlace(player, location)) {
                 event.setCancelled(true);
                 return;
             }
-            ChestType chestType = chestManager.getChestType(itemStack);
-            Location location = event.getBlock().getLocation();
 
+            FileManager config = new FileManager(plugin);
+            int maxChests = config.getInt("config.max-place-chest", FileType.CONFIG);
+
+            if (chestManager.getAmountChestPlaced(player.getUniqueId()) >= maxChests) {
+                player.sendMessage(config.get("max-chest-placed", FileType.MESSAGES));
+                event.setCancelled(true);
+                return;
+            }
+
+            ChestType chestType = chestManager.getChestType(itemStack);
             chestManager.placeCustomChest(player, location, chestType);
 
             if (player.getGameMode() != GameMode.CREATIVE) player.getInventory().remove(itemStack);
@@ -111,6 +121,12 @@ public class PlayerListener implements Listener {
         if (chestManager.isCustomChest(block)) {
             UUID chestUUID = chestManager.getCustomChestUUID(block);
 
+            // Check if the player can break the chest.
+            if (WorldGuardUtils.hasWorldGuard() && !WorldGuardUtils.canBreak(player, block.getLocation())) {
+                event.setCancelled(true);
+                return;
+            }
+
             // Check if the chest is bugged remove it.
             if (!chestManager.exists(chestUUID)) {
                 chestManager.removeChest(chestUUID, block.getLocation());
@@ -130,5 +146,4 @@ public class PlayerListener implements Listener {
             }
         }
     }
-
 }
