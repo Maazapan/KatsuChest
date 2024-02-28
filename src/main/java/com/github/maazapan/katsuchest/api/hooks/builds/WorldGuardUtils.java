@@ -1,4 +1,4 @@
-package com.github.maazapan.katsuchest.api.hooks;
+package com.github.maazapan.katsuchest.api.hooks.builds;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;

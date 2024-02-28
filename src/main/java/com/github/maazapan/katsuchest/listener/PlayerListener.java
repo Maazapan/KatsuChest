@@ -2,7 +2,7 @@ package com.github.maazapan.katsuchest.listener;
 
 import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.api.ChestOpenEvent;
-import com.github.maazapan.katsuchest.api.hooks.WorldGuardUtils;
+import com.github.maazapan.katsuchest.api.hooks.builds.WorldGuardUtils;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;

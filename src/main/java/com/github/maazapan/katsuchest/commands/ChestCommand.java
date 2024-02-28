@@ -1,12 +1,15 @@
 package com.github.maazapan.katsuchest.commands;
 
 import com.github.maazapan.katsuchest.KatsuChest;
+import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ChestCommand implements CommandExecutor, TabCompleter {
@@ -39,6 +43,45 @@ public class ChestCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0].toLowerCase()) {
 
+            /*
+             + Lock or unlock a custom chest.
+             - Command: /katsuchest lock
+             */
+            case "lock": {
+                if (!sender.hasPermission("katsuchest.command.lock")) {
+                    sender.sendMessage(messages.getWithPrefix("no-permission"));
+                    return true;
+                }
+
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(messages.getWithPrefix("no-console"));
+                    return true;
+                }
+
+                Player player = (Player) sender;
+
+                ChestManager chestManager = plugin.getChestManager();
+                Block block = player.getTargetBlock(null, 5);
+
+                if (block.getType() != Material.CHEST || !chestManager.isCustomChest(block)) {
+                    sender.sendMessage(messages.getWithPrefix("no-chest"));
+                    return true;
+                }
+
+                UUID chestUUID = chestManager.getCustomChestUUID(block);
+                CustomChest customChest = chestManager.getCustomChest(chestUUID);
+
+                String message = customChest.isLocked() ? "unlock-chest" : "lock-chest";
+                customChest.setLocked(!customChest.isLocked());
+
+                sender.sendMessage(messages.getWithPrefix(message));
+            }
+            break;
+
+            /*
+             + Help command.
+             - Command: /katsuchest help
+             */
             case "help": {
                 if (!sender.hasPermission("katsuchest.command.help")) {
                     sender.sendMessage(messages.getWithPrefix("no-permission"));
@@ -126,7 +169,7 @@ public class ChestCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args) {
-        List<String> subCommands = Arrays.asList("give", "reload", "help");
+        List<String> subCommands = Arrays.asList("give", "reload", "help", "lock");
         List<String> chestTypes = Arrays.stream(ChestType.values())
                 .map(Objects::toString)
                 .collect(Collectors.toList());

@@ -14,11 +14,14 @@ cant-open-chest: "&cYou can''t open this chest!"
 no-args: "&fPlease use &e/ktchest help &fto see the commands."
 reload: "&fThe plugin has been &ereloaded."
 no-exist-player: "&cThis player doesn't exist."
+unlock-chest: "&fYou have &eunlocked &fthe chest you are looking."
+lock-chest: "&fYou have &clocked &fthe chest you are looking."
 no-permission: "&cYou dont have permission to do that."
 no-args-give: "&fPlease use &e/ktchest give <id_chest> <player> &fto give a chest."
 no-exist-chest: "&cThis chest doesn''t exist."
 max-chest-placed: "&cYou can't place more chest."
 give-chest: "&fYou have received a &e%chest% &fchest."
+no-chest: "&cThe chest you are looking at is not a KatsuChest."
 chest-non-has-pin: "&cThis chest doesn't have a pin, open it again to place a pin.."
 chest-set-pin: "&fYou have set a pin to this chest. &7(%pin%)"
 max-keys: "&cYou can't get more keys to this chest."
@@ -32,4 +35,5 @@ help-list:
   - ' &8- &e/ktc reload &8| &fReload all config files.'
   - ' &8- &e/ktc help &8| &fShow this help.'
   - ' &8- &e/ktc give <id_chest> <player> &8| &fGive a chest to a player.'
+  - ' &8- &e/ktc lock &8| &fLock or Unlock the chest the admin is looking at.'
   - ''
