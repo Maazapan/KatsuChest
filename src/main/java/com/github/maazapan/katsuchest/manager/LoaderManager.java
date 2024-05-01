@@ -1,8 +1,8 @@
 package com.github.maazapan.katsuchest.manager;
 
 import com.github.maazapan.katsuchest.KatsuChest;
-import com.github.maazapan.katsuchest.api.hooks.bstats.Metrics;
-import com.github.maazapan.katsuchest.api.hooks.update.Update;
+import com.github.maazapan.katsuchest.api.integrations.bstats.Metrics;
+import com.github.maazapan.katsuchest.api.integrations.update.Update;
 import com.github.maazapan.katsuchest.chest.manager.RecipeManager;
 import com.github.maazapan.katsuchest.commands.ChestCommand;
 import com.github.maazapan.katsuchest.listener.ChestListener;

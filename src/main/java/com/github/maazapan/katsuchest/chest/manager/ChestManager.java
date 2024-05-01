@@ -221,6 +221,19 @@ public class ChestManager {
         return new NBTBlock(block).getData().getUUID("katsu_chest_uuid");
     }
 
+
+    /**
+     * Gets the owner of the custom chest.
+     *
+     * @param block Block
+     * @return UUID
+     */
+    public UUID getCustomChestOwner(Block block) {
+        return new NBTBlock(block).getData().getUUID("katsu_chest_owner");
+    }
+
+
+
     /**
      * Gets all owners of the chests.
      *

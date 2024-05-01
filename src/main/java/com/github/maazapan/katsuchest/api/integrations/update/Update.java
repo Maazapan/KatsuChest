@@ -1,4 +1,4 @@
-package com.github.maazapan.katsuchest.api.hooks.update;
+package com.github.maazapan.katsuchest.api.integrations.update;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

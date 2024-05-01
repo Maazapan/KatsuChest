@@ -61,6 +61,7 @@ public class ChestCreator {
         NBTBlock nbtBlock = new NBTBlock(location.getBlock());
         nbtBlock.getData().setString("katsu_chest_type", chestType.toString());
         nbtBlock.getData().setUUID("katsu_chest_uuid", customChest.getUUID());
+        nbtBlock.getData().setUUID("katsu_chest_owner", player.getUniqueId());
 
         NBTEntity nbtEntity = new NBTEntity(armorStand);
         nbtEntity.getPersistentDataContainer().setUUID("katsu_chest_uuid", customChest.getUUID());

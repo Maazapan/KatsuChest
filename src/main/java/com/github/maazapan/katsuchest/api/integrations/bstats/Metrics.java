@@ -1,4 +1,4 @@
-package com.github.maazapan.katsuchest.api.hooks.bstats;
+package com.github.maazapan.katsuchest.api.integrations.bstats;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

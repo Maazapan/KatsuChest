@@ -5,6 +5,11 @@ api-version: 1.16
 softdepend:
   - MultiverseCore
   - WorldGuard
+  - RedProtect
+  - GriefPrevention
+  - Towny
+  - Lands
+  - CoreProtect
 
 commands:
   katsuchest:

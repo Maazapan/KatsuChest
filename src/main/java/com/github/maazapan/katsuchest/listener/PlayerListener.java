@@ -2,7 +2,7 @@ package com.github.maazapan.katsuchest.listener;
 
 import com.github.maazapan.katsuchest.KatsuChest;
 import com.github.maazapan.katsuchest.api.ChestOpenEvent;
-import com.github.maazapan.katsuchest.api.hooks.builds.WorldGuardUtils;
+import com.github.maazapan.katsuchest.api.integrations.IntegrationManager;
 import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.chest.manager.ChestManager;
@@ -49,7 +49,9 @@ public class PlayerListener implements Listener {
 
         // If the block is a custom chest, then we check if the player can open it.
         if (chestManager.isCustomChest(block)) {
-            if (WorldGuardUtils.hasWorldGuard() && !WorldGuardUtils.canInteract(player, block.getLocation())) {
+            IntegrationManager integrationManager = plugin.getIntegrationManager();
+
+            if (!integrationManager.canUse(player, block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }
@@ -77,12 +79,15 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
 
         if (event.isCancelled() || itemStack.getType() == Material.AIR) return;
+
         ChestManager chestManager = plugin.getChestManager();
         Location location = event.getBlock().getLocation();
 
         // If the item is a custom chest, then we create a new custom chest.
         if (chestManager.isCustomChest(itemStack)) {
-            if (WorldGuardUtils.hasWorldGuard() && !WorldGuardUtils.canPlace(player, location)) {
+            IntegrationManager integrationManager = plugin.getIntegrationManager();
+
+            if (!integrationManager.canUse(player, location)) {
                 event.setCancelled(true);
                 return;
             }
@@ -120,9 +125,12 @@ public class PlayerListener implements Listener {
         // If the block is a custom chest, then we remove it from the map.
         if (chestManager.isCustomChest(block)) {
             UUID chestUUID = chestManager.getCustomChestUUID(block);
+            UUID ownerUUID = chestManager.getCustomChestOwner(block);
 
             // Check if the player can break the chest.
-            if (WorldGuardUtils.hasWorldGuard() && !WorldGuardUtils.canBreak(player, block.getLocation())) {
+            IntegrationManager integrationManager = plugin.getIntegrationManager();
+
+            if (!integrationManager.canUse(player, block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }
@@ -133,16 +141,19 @@ public class PlayerListener implements Listener {
                 return;
             }
 
-            if (chestManager.isChestOwner(chestUUID, player.getUniqueId())) {
-                CustomChest customChest = chestManager.getCustomChest(chestUUID);
-                chestManager.removeChest(chestUUID, player.getUniqueId());
+            if (!player.hasPermission("katsuchest.break.admin") && !chestManager.isChestOwner(chestUUID, player.getUniqueId())) {
+                event.setCancelled(true);
+                return;
+            }
 
-                // Drop the custom chest item.
-                if (player.getGameMode() == GameMode.SURVIVAL) {
-                    ItemStack itemStack = chestManager.getCustomChestItem(customChest.getType());
-                    player.getWorld().dropItemNaturally(block.getLocation(), itemStack);
-                    event.setDropItems(false);
-                }
+            CustomChest customChest = chestManager.getCustomChest(chestUUID);
+            chestManager.removeChest(chestUUID, ownerUUID);
+
+            // Drop the custom chest item.
+            if (player.getGameMode() == GameMode.SURVIVAL) {
+                ItemStack itemStack = chestManager.getCustomChestItem(customChest.getType());
+                player.getWorld().dropItemNaturally(block.getLocation(), itemStack);
+                event.setDropItems(false);
             }
         }
     }
