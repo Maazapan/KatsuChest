@@ -8,7 +8,9 @@ import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import com.github.maazapan.katsuchest.utils.gui.InventoryGUI;
 import com.github.maazapan.katsuchest.utils.gui.pages.PlayerPage;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -39,15 +41,15 @@ public class FriendGUI extends InventoryGUI {
     @Override
     @SuppressWarnings("all")
     public void onClick(InventoryClickEvent event) {
-        NBTItem nbtItem = new NBTItem(event.getCurrentItem());
+        ReadableNBT nbt = NBT.readNbt(event.getCurrentItem());
         event.setCancelled(true);
 
         // Check if the item has a player head.
-        if (nbtItem.hasTag("katsu_player_uuid")) {
+        if (nbt.hasTag("katsu_player_uuid")) {
             FileManager messages = new FileManager(plugin, FileType.MESSAGES);
             FileManager config = new FileManager(plugin, FileType.CONFIG);
 
-            UUID uuid = nbtItem.getUUID("katsu_player_uuid");
+            UUID uuid = nbt.getUUID("katsu_player_uuid");
 
             if (friendChest.getFriends().contains(uuid)) {
                 player.sendMessage(messages.getWithPrefix("remove-friend").replace("%player_name%", Bukkit.getOfflinePlayer(uuid).getName()));
@@ -63,11 +65,12 @@ public class FriendGUI extends InventoryGUI {
         }
 
         // Check if the item has actions.
-        if (nbtItem.hasTag("katsu-chest-action")) {
-            List<String> actions = nbtItem.getObject("katsu-chest-action", List.class);
+
+        if (nbt.hasTag("katsu-chest-action")) {
+            List<String> stringList = KatsuUtils.bytesToList(nbt.getByteArray("katsu-chest-action"));
             PlayerPage page = pagesMap.get(player.getUniqueId());
 
-            for (String action : actions) {
+            for (String action : stringList) {
                 switch (action) {
 
                     // Open a chest gui.

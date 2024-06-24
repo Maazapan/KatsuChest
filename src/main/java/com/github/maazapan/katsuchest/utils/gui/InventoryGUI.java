@@ -1,10 +1,11 @@
 package com.github.maazapan.katsuchest.utils.gui;
 
 import com.github.maazapan.katsuchest.KatsuChest;
+import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBT;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -49,16 +50,6 @@ public abstract class InventoryGUI implements InventoryHolder {
                         .fromConfig(config.toConfig(), basePath + key)
                         .toItemStack();
 
-                NBTItem nbtItem = new NBTItem(itemStack);
-
-                if (config.contains(basePath + key + ".actions")) {
-                    nbtItem.setObject("katsu-chest-action", config.getStringList(basePath + key + ".actions"));
-
-                } else {
-                    nbtItem.setString("katsu-chest-item", "katsu");
-                }
-
-                nbtItem.applyNBT(itemStack);
 
                 if (config.contains(path + ".items." + key + ".slots")) {
                     for (Integer slots : config.toConfig().getIntegerList(path + ".items." + key + ".slots")) {

@@ -1,7 +1,7 @@
 package com.github.maazapan.katsuchest.utils.itemstack;
 
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBT;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -154,22 +154,24 @@ public class ItemBuilder {
 
 
     public ItemBuilder setNBT(String key, String value){
-        NBTItem nbtItem = new NBTItem(is);
-        nbtItem.setString(key, value);
-        nbtItem.applyNBT(is);
+        NBT.modify(is, nbt ->
+        {
+            nbt.setString(key, value);
+        });
         return this;
     }
 
     public ItemBuilder setNBT(String key, UUID value){
-        NBTItem nbtItem = new NBTItem(is);
-        nbtItem.setUUID(key, value);
-        nbtItem.applyNBT(is);
+        NBT.modify(is, nbt ->
+        {
+            nbt.setUUID(key, value);
+        });
         return this;
     }
 
     public ItemBuilder setSkullBase64(String base64) {
         is = new ItemStack(Material.PLAYER_HEAD);
-        PlayerProfile profile = Bukkit.getServer().createPlayerProfile(UUID.randomUUID(), "Katsu Head");
+        PlayerProfile profile = Bukkit.getServer().createPlayerProfile(UUID.randomUUID(), "KatsuHead");
 
         try {
             profile.getTextures().setSkin(new URL(KatsuUtils.getURLFromBase64(base64)));
@@ -375,10 +377,11 @@ public class ItemBuilder {
             this.setModelData(config.getInt(path + ".model_data"));
         }
 
-        NBTItem nbtItem = new NBTItem(is);
         if (config.contains(path + ".actions")) {
-            nbtItem.setObject("katsu-chest-action", config.getStringList(path + ".actions"));
-            nbtItem.applyNBT(is);
+            NBT.modify(is, nbt ->
+            {
+                nbt.setByteArray("katsu-chest-action", KatsuUtils.toListBytes(config.getStringList(path + ".actions")));
+            });
         }
         return this;
     }
@@ -387,11 +390,11 @@ public class ItemBuilder {
     public ItemBuilder replace(String replace, String replacement) {
         ItemMeta meta = is.getItemMeta();
 
-        meta.setDisplayName(KatsuUtils.coloredHex(meta.getDisplayName().replace(replace, replacement)));
+        meta.setDisplayName(KatsuUtils.coloredHex(meta.getDisplayName().replaceAll(replace, replacement)));
 
         if (meta.hasLore()) {
             List<String> lore = meta.getLore();
-            lore.replaceAll(s -> KatsuUtils.coloredHex(s.replace(replace, replacement)));
+            lore.replaceAll(s -> KatsuUtils.coloredHex(s.replaceAll(replace, replacement)));
             meta.setLore(lore);
         }
         is.setItemMeta(meta);

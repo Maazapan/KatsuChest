@@ -6,11 +6,13 @@ import com.github.maazapan.katsuchest.chest.manager.ChestManager;
 import com.github.maazapan.katsuchest.chest.types.FriendChest;
 import com.github.maazapan.katsuchest.chest.types.KeyChest;
 import com.github.maazapan.katsuchest.chest.types.PanelChest;
+import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import com.github.maazapan.katsuchest.utils.gui.InventoryGUI;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -33,11 +35,12 @@ public class ChestGUI extends InventoryGUI {
     @Override
     @SuppressWarnings("all")
     public void onClick(InventoryClickEvent event) {
-        NBTItem nbtItem = new NBTItem(event.getCurrentItem());
+        ReadableNBT nbt = NBT.readNbt(event.getCurrentItem());
         event.setCancelled(true);
 
-        if (nbtItem.hasTag("katsu-chest-action")) {
-            List<String> stringList = nbtItem.getObject("katsu-chest-action", List.class);
+        if (nbt.hasTag("katsu-chest-action")) {
+            List<String> stringList = KatsuUtils.bytesToList(nbt.getByteArray("katsu-chest-action"));
+
             FileManager config = new FileManager(plugin, FileType.CONFIG);
             FileManager message = new FileManager(plugin, FileType.MESSAGES);
 
@@ -105,6 +108,7 @@ public class ChestGUI extends InventoryGUI {
         FileManager config = new FileManager(plugin, FileType.CONFIG);
 
         this.createGUI();
+
         // Add items to the GUI
         ItemBuilder lockItem = new ItemBuilder()
                 .fromConfig(config.toConfig(), "config.inventory.chest-gui.lock-item")
@@ -118,9 +122,9 @@ public class ChestGUI extends InventoryGUI {
                 .fromConfig(config.toConfig(), "config.inventory.chest-gui.insert-item")
                 .replace("%status%", formatStatus(customChest.isInsertContent()));
 
+        this.setItem(extractItem.toItemStack(), extractItem.getSlot());
         this.setItem(insertItem.toItemStack(), insertItem.getSlot());
         this.setItem(lockItem.toItemStack(), lockItem.getSlot());
-        this.setItem(extractItem.toItemStack(), extractItem.getSlot());
 
         switch (customChest.getType()) {
 

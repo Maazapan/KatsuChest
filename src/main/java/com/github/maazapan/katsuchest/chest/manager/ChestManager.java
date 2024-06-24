@@ -6,6 +6,7 @@ import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Location;
@@ -36,6 +37,7 @@ public class ChestManager {
      * @return ItemStack Custom Chest
      */
     public ItemStack getCustomChestItem(ChestType chestType) {
+
         return new ItemBuilder()
                 .fromConfig(plugin.getConfig(), "config.custom-chest." + chestType + ".chest-item")
                 .setNBT("katsu_chest_type", chestType.toString())

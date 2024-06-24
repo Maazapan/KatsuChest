@@ -1,8 +1,10 @@
 package com.github.maazapan.katsuchest.listener;
 
 import com.github.maazapan.katsuchest.KatsuChest;
+import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.gui.InventoryGUI;
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -38,18 +40,18 @@ public class InventoryListener implements Listener {
         if (itemStack != null && itemStack.getType() != Material.AIR) {
             if (inventoryHolder instanceof InventoryGUI) {
                 InventoryGUI inventoryGUI = (InventoryGUI) inventoryHolder;
-                NBTItem nbtItem = new NBTItem(itemStack);
+                ReadableNBT nbt = NBT.readNbt(itemStack);
 
-                if (nbtItem.hasTag("katsu-chest-item")) event.setCancelled(true);
+                event.setCancelled(true);
 
                 // Handle the click event.
                 inventoryGUI.onClick(event);
 
-                if (nbtItem.hasTag("katsu-chest-action")) {
-                    List<String> actions = nbtItem.getObject("katsu-chest-action", List.class);
+                if (nbt.hasTag("katsu-chest-action")) {
+                    List<String> stringList = KatsuUtils.bytesToList(nbt.getByteArray("katsu-chest-action"));
                     Player player = (Player) event.getWhoClicked();
 
-                    for (String action : actions) {
+                    for (String action : stringList) {
                         String[] actionSplit = action.split(": ");
 
                         switch (actionSplit[0]) {

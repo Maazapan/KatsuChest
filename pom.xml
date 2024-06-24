@@ -6,7 +6,7 @@
 
     <groupId>com.github.maazapan</groupId>
     <artifactId>KatsuChest</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.9</version>
     <packaging>jar</packaging>
 
     <name>KatsuChest</name>
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api</artifactId>
-            <version>2.12.2</version>
+            <version>2.13.1</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>

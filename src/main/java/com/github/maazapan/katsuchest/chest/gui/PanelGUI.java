@@ -8,7 +8,9 @@ import com.github.maazapan.katsuchest.utils.file.FileManager;
 import com.github.maazapan.katsuchest.utils.file.enums.FileType;
 import com.github.maazapan.katsuchest.utils.gui.InventoryGUI;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -43,11 +45,11 @@ public class PanelGUI extends InventoryGUI {
     @Override
     @SuppressWarnings("all")
     public void onClick(InventoryClickEvent event) {
-        NBTItem nbtItem = new NBTItem(event.getCurrentItem());
+        ReadableNBT nbt = NBT.readNbt(event.getCurrentItem());
         event.setCancelled(true);
 
-        if (nbtItem.hasTag("katsu-chest-action")) {
-            List<String> stringList = nbtItem.getObject("katsu-chest-action", List.class);
+        if (nbt.hasTag("katsu-chest-action")) {
+            List<String> stringList = KatsuUtils.bytesToList(nbt.getByteArray("katsu-chest-action"));
             FileManager messages = new FileManager(plugin, FileType.MESSAGES);
 
             for (String actions : stringList) {
