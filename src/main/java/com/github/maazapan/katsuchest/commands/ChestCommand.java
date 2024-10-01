@@ -43,6 +43,11 @@ public class ChestCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0].toLowerCase()) {
 
+            case "test": {
+                Player player = (Player) sender;
+                player.sendMessage("" + plugin.getChestManager().canPlaceChest(player.getLocation()));
+            }
+            break;
             /*
              + Lock or unlock a custom chest.
              - Command: /katsuchest lock

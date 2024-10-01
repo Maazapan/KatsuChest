@@ -6,10 +6,10 @@ import com.github.maazapan.katsuchest.chest.CustomChest;
 import com.github.maazapan.katsuchest.chest.enums.ChestType;
 import com.github.maazapan.katsuchest.utils.KatsuUtils;
 import com.github.maazapan.katsuchest.utils.itemstack.ItemBuilder;
-import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTBlock;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.ArmorStand;
@@ -74,6 +74,34 @@ public class ChestManager {
             return;
         }
         player.getInventory().addItem(itemStack);
+    }
+
+
+    /**
+     * Check if the player can place a chest.
+     * and if the near are chests.
+     *
+     * @param location Location
+     * @return boolean
+     */
+    public boolean canPlaceChest(Location location) {
+        Location blockLocation = location.clone();
+
+        int[][] offsets = {
+                {-1, 0, 0},
+                {0, 0, 1},
+                {1, 0, 0},
+                {0, 0, -1}};
+
+        for (int[] offset : offsets) {
+            Location loc = blockLocation.clone().add(offset[0], offset[1], offset[2]);
+
+           // loc.getBlock().setType(Material.REDSTONE_BLOCK);
+
+            if (loc.getBlock().getType() == Material.AIR) continue;
+            return !isCustomChest(loc.getBlock());
+        }
+        return true;
     }
 
     /**

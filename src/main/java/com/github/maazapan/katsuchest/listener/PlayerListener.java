@@ -78,10 +78,18 @@ public class PlayerListener implements Listener {
         ItemStack itemStack = event.getItemInHand();
         Player player = event.getPlayer();
 
-        if (event.isCancelled() || itemStack.getType() == Material.AIR) return;
+        Block block = event.getBlock();
 
+        if (event.isCancelled() || itemStack.getType() == Material.AIR) return;
         ChestManager chestManager = plugin.getChestManager();
         Location location = event.getBlock().getLocation();
+
+        if (block.getType() == Material.CHEST) {
+            if (!chestManager.canPlaceChest(block.getLocation())) {
+                event.setCancelled(true);
+            }
+            return;
+        }
 
         // If the item is a custom chest, then we create a new custom chest.
         if (chestManager.isCustomChest(itemStack)) {
@@ -154,6 +162,14 @@ public class PlayerListener implements Listener {
                 ItemStack itemStack = chestManager.getCustomChestItem(customChest.getType());
                 player.getWorld().dropItemNaturally(block.getLocation(), itemStack);
                 event.setDropItems(false);
+
+                Chest chest = (Chest) block.getState();
+
+                for (ItemStack drop : chest.getBlockInventory()) {
+                    if (drop == null || drop.getType() == Material.AIR) continue;
+
+                    player.getWorld().dropItemNaturally(block.getLocation(), drop);
+                }
             }
         }
     }

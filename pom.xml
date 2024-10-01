@@ -6,7 +6,7 @@
 
     <groupId>com.github.maazapan</groupId>
     <artifactId>KatsuChest</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>KatsuChest</name>
@@ -49,6 +49,14 @@
                             <shadedPattern>com.github.maazapan.katsuchest.utils.nbtapi</shadedPattern>
                         </relocation>
                     </relocations>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <outputDirectory>C:\Users\Barri\OneDrive\Escritorio\1.20.4 Paper\plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
