@@ -112,15 +112,15 @@ public class ChestGUI extends InventoryGUI {
         // Add items to the GUI
         ItemBuilder lockItem = new ItemBuilder()
                 .fromConfig(config.toConfig(), "config.inventory.chest-gui.lock-item")
-                .replace("%status%", formatLocked());
+                .replace("%status%", customChest.isLocked() ? config.get("config.formats.locked") : config.get("config.formats.unlocked"));
 
         ItemBuilder extractItem = new ItemBuilder()
                 .fromConfig(config.toConfig(), "config.inventory.chest-gui.extract-item")
-                .replace("%status%", formatStatus(customChest.isExtractContent()));
+                .replace("%status%", customChest.isExtractContent() ? config.get("config.formats.enabled") : config.get("config.formats.disabled"));
 
         ItemBuilder insertItem = new ItemBuilder()
                 .fromConfig(config.toConfig(), "config.inventory.chest-gui.insert-item")
-                .replace("%status%", formatStatus(customChest.isInsertContent()));
+                .replace("%status%", customChest.isInsertContent() ? config.get("config.formats.enabled") : config.get("config.formats.disabled"));
 
         this.setItem(extractItem.toItemStack(), extractItem.getSlot());
         this.setItem(insertItem.toItemStack(), insertItem.getSlot());
@@ -158,14 +158,5 @@ public class ChestGUI extends InventoryGUI {
             break;
         }
         this.open(player);
-    }
-
-
-    private String formatLocked() {
-        return customChest.isLocked() ? "&c&lLOCKED" : "&A&lUNLOCKED";
-    }
-
-    private String formatStatus(boolean status) {
-        return status ? "&a&lENABLED" : "&c&lDISABLED";
     }
 }

@@ -96,8 +96,6 @@ public class ChestManager {
         for (int[] offset : offsets) {
             Location loc = blockLocation.clone().add(offset[0], offset[1], offset[2]);
 
-           // loc.getBlock().setType(Material.REDSTONE_BLOCK);
-
             if (loc.getBlock().getType() == Material.AIR) continue;
             return !isCustomChest(loc.getBlock());
         }

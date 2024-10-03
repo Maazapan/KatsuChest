@@ -47,6 +47,13 @@ config:
     reset-digits: BLOCK_LEVER_CLICK;1;1.4
     wrong-password: BLOCK_CHEST_LOCKED;1;1.8
 
+  # Formats for the chest status.
+  formats:
+    locked: "&C&LLOCKED"
+    unlocked: "&a&lUNLOCKED"
+    disabled: "&C&LDISABLED"
+    enabled: "&A&LENABLED"
+
   custom-chest:
 
     # The key chest is a chest that can be opened with a chest block.
